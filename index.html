@@ -1,38 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Que pasaria 3</title>
-</head>
 
-<body>
-<form name="contact-form" method="post" class="form" action="https://script.google.com/macros/s/AKfycbzCQVmpvNaqd4S_1BBQugU9DGXN-pcUIBSakm2A6oYUa2wvCsDIlK5G6eTbI8mHoCW01w/exec">
-    <h1 class="title">Bienvenidos</h1>
-    <h3 class="subtitle">¡Vamos, crea una cuenta!</h3>
-    <div class="input-container ic1">
-        <input name="Nombre" id="firstname" class="input" type="text" placeholder=" "/>
-        <input type="reset" value="Submit">
-        <div class="cut"></div>
-        <label for="firstname" class="placeholder">Nombre</label>
-    </div>
-    <button type="submit" class="submit">submit</button>
-</form>
 <script>
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzCQVmpvNaqd4S_1BBQugU9DGXN-pcUIBSakm2A6oYUa2wvCsDIlK5G6eTbI8mHoCW01w/exec';
-const form = document.forms['contact-form'];
+function reset_animation() {
+  var el = document.getElementById('animated');
+  el.style.animation = 'none';
+  el.offsetHeight; /* trigger reflow */
+  el.style.animation = null; 
+}
 
-form.addEventListener('submit', e => {
-    e.preventDefault()
+</script>
 
-    fetch(scriptUrl, {method: 'POST', body: new FormData(form)})
-            .then(response => Swal.fire({
-        title: "¡MUCHAS GRACIAS!",
-        text: "Formulario Envíado",
-        icon: "success"}))
-            .then( () => { window.location.reload() } )
-            .catch(error => console.error('Error', error.message))
-})
-    
+    <style>
+
+
+#animated {
+  position: absolute;
+  top: 70px;
+  width: 50px; height: 50px;
+  background-color: black;
+  animation: bounce 3s ease-in-out infinite;
+}
+@keyframes bounce {
+  0% { left: 0; }
+  50% { left: calc( 100% - 50px ); }
+  100% { left: 0; }
+}
+
+</style>
+
+<div id="animated"></div>
+<button onclick="reset_animation()">Reset</button>
+
+
+</head>
 </script>
 </body>
 </html>
