@@ -21,12 +21,11 @@ function reset_animation() {
   top: 70px;
   width: 50px; height: 50px;
   background-color: black;
-  animation: bounce 3s ease-in-out;
+  animation-duration: 3s;
 }
 @keyframes bounce {
   0% { left: 0; }
-  50% { left: calc( 100% - 50px ); }
-  100% { left: 0; }
+  100% { left: 50; }
 }
 
 </style>
