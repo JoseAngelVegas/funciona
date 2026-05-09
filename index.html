@@ -1,6 +1,8 @@
-<!DOCTYPE html>
 <html>
 <head>
+
+<button onclick="salirSam()" id="pruebita" class="salir">Prueba</button>
+
 
 <script>
 
@@ -9,6 +11,12 @@ function reset_animation() {
   el.style.animation = 'none';
   el.offsetHeight; /* trigger reflow */
   el.style.animation = null; 
+  
+     var el = document.getElementById('pruebita');
+     el.style.animation = 'none';
+  el.offsetHeight; /* trigger reflow */
+  el.style.animation = null; 
+
 }
 
 </script>
@@ -23,19 +31,20 @@ function reset_animation() {
   background-color: black;
   animation: bounce 3s normal;
 }
+
+.salir {
+  position: relative;
+  top: 20px;
+  animation: bounce 3s normal;
+}
+      
       
 @keyframes bounce {
     0% { left: 0px; }
-  100% { left: 0px; }
+  100% { left: 100px; }
 }
 
 </style>
 
 <div id="animated"></div>
-<button onclick="reset_animation()">Reset</button>
-
-
-</head>
-</script>
-</body>
-</html>
+<button onclick="reset_animation()">Reset</
