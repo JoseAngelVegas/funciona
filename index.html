@@ -1,50 +1,13 @@
 <html>
 <head>
 
-<button onclick="salirSam()" id="pruebita" class="salir">Prueba</button>
-
-
-<script>
-
-function reset_animation() {
-  var el = document.getElementById('animated');
-  el.style.animation = 'none';
-  el.offsetHeight; /* trigger reflow */
-  el.style.animation = null; 
+import { pipeline } from '@xenova/transformers';
   
-     var el = document.getElementById('pruebita');
-     el.style.animation = 'none';
-  el.offsetHeight; /* trigger reflow */
-  el.style.animation = null; 
-
-}
-
-</script>
-
-    <style>
+let extractor = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
+let input = "El clima en Dallas es muy caluroso hoy";
+let keywords = ["caluroso", "Dallas"];
 
 
-#animated {
-  position: relative;
-  top: 70px;
-  width: 50px; height: 50px;
-  background-color: black;
-  animation: bounce 3s normal;
-}
+</head>
 
-.salir {
-  position: relative;
-  top: 20px;
-  animation: bounce 3s normal;
-}
-      
-      
-@keyframes bounce {
-    0% { left: 0px; }
-  100% { left: 100px; }
-}
-
-</style>
-
-<div id="animated"></div>
-<button onclick="reset_animation()">Reset</
+</html>
