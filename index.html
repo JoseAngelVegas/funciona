@@ -112,9 +112,9 @@
             const confianza = (score * 100).toFixed(2);
 
             if (label === 'POSITIVE') {
-                resultado.innerHTML = `🟢 POSITIVO <br><span style="font-size:14px; color:#666;">Confianza: ${confianza}%</span>`;
+                resultado.innerHTML = `🟢 POSITIVO <br><span style="font-size:14px; color:#fffff;">Confianza: ${confianza}%</span>`;
             } else {
-                resultado.innerHTML = `🔴 NEGATIVO <br><span style="font-size:14px; color:#666;">Confianza: ${confianza}%</span>`;
+                resultado.innerHTML = `🔴 NEGATIVO <br><span style="font-size:14px; color:#fffff;">Confianza: ${confianza}%</span>`;
             }
         } catch (error) {
             resultado.innerText = "Error en el análisis.";
