@@ -1,13 +1,2 @@
 node_modules/
 .env
-
-# Inicializar el repositorio local
-git init
-
-# Añadir todos los archivos al área de preparación
-git add .
-
-# Crear el primer commit
-git commit -m "Primer commit: Detector de sentimientos con Transformers.js"
-
-git branch -M main
