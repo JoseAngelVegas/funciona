@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ejemplo con Service Worker</title>
+    <title>Simulador de Tiempo Transcurrido</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,6 +16,8 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             max-width: 400px;
+            max-height: 400px;
+            overflow-y: auto;
         }
         .mensaje {
             padding: 8px;
@@ -23,6 +25,11 @@
             background-color: #e2f0d9;
             border-left: 5px solid #70ad47;
             animation: aparecer 0.3s ease-in;
+        }
+        .antiguo {
+            background-color: #e9ecef;
+            border-left: 5px solid #6c757d;
+            opacity: 0.8;
         }
         @keyframes aparecer {
             from { opacity: 0; transform: translateY(-10px); }
@@ -32,63 +39,73 @@
 </head>
 <body>
 
-    <h2>Mensajes desde el Service Worker</h2>
-    <p>El Worker se ejecuta en segundo plano. (Abre la consola para ver los mensajes activos).</p>
+    <h2>Mensajes basados en Reloj Interno</h2>
+    <p>Prueba a cerrar esta pestaña, espera 15 o 20 segundos, y vuelve a abrirla. Verás cómo aparecen los mensajes que "ocurrieron" mientras no estabas.</p>
     
     <div id="contenedor"></div>
 
     <script>
         const contenedor = document.getElementById('contenedor');
+        
+        const frases = [
+            "¡El conocimiento es poder!",
+            "La persistencia todo lo alcanza.",
+            "Código limpio, mente limpia.",
+            "Javascript está en todas partes.",
+            "No dejes para mañana el bug que puedes fixear hoy.",
+            "La seguridad es lo primero."
+        ];
 
-        // 1. Registramos el Service Worker usando un Blob (para mantenerlo en un solo archivo)
-        // Nota: Para producción, es mucho mejor tener un archivo separado llamado 'sw.js'
-        const codigoSW = `
-            let contador = 1;
-
-            // El Service Worker se activa e instala
-            self.addEventListener('install', (event) => {
-                self.skipWaiting();
-            });
-
-            self.addEventListener('activate', (event) => {
-                event.waitUntil(self.clients.claim());
-                
-                // Iniciamos el bucle. OJO: El navegador podría pausar esto si pasa mucho tiempo cerrada la web
-                setInterval(() => {
-                    console.log("Service Worker activo en segundo plano. Contador: " + contador);
-                    
-                    // Enviamos el mensaje a todas las pestañas abiertas (si las hay)
-                    self.clients.matchAll().then(clients => {
-                        clients.forEach(client => {
-                            client.postMessage({ texto: "¡Hola! Soy el texto número " + contador });
-                        });
-                    });
-                    contador++;
-                }, 2000);
-            });
-        `;
-
-        const blob = new Blob([codigoSW], { type: 'application/javascript' });
-        const swURL = URL.createObjectURL(blob);
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register(swURL).then((registration) => {
-                console.log('Service Worker registrado con éxito en el alcance:', registration.scope);
-            }).catch((error) => {
-                console.error('Fallo al registrar el Service Worker:', error);
-            });
-
-            // 2. Escuchamos los mensajes que envia el Service Worker cuando la página ESTÁ abierta
-            navigator.serviceWorker.addEventListener('message', (event) => {
-                const nuevoParrafo = document.createElement('p');
-                nuevoParrafo.className = 'mensaje';
-                nuevoParrafo.textContent = event.data.texto;
-                contenedor.appendChild(nuevoParrafo);
-            });
-        } else {
-            alert('Tu navegador no soporta Service Workers.');
+        // Función para pintar un mensaje en la pantalla
+        function agregarMensajeAlDOM(texto, esAntiguo = false) {
+            const nuevoParrafo = document.createElement('p');
+            nuevoParrafo.className = esAntiguo ? 'mensaje antiguo' : 'mensaje';
+            nuevoParrafo.textContent = texto;
+            contenedor.appendChild(nuevoParrafo);
+            contenedor.scrollTop = contenedor.scrollHeight; // Auto-scroll al final
         }
-    </script>
 
+        // Función para obtener una frase aleatoria
+        function obtenerFraseAleatoria() {
+            return frases[Math.floor(Math.random() * frases.length)];
+        }
+
+        // === LÓGICA DEL RELOJ INTERNO AL ABRIR LA PÁGINA ===
+        
+        const ahora = Date.now(); // Hora exacta actual en milisegundos
+        const ultimaVez = localStorage.getItem('ultima_visita');
+
+        if (ultimaVez) {
+            const milisegundosPasados = ahora - parseInt(ultimaVez);
+            // Calculamos cuántos bloques de 5 segundos (5000ms) pasaron en la vida real
+            const ciclosPerdidos = Math.floor(milisegundosPasados / 5000);
+
+            if (ciclosPerdidos > 0) {
+                agregarMensajeAlDOM(`⚠️ Estuviste fuera. Se simularon ${ciclosPerdidos} mensajes perdidos:`, true);
+                
+                // Generamos de golpe los mensajes que "debieron" aparecer
+                for (let i = 0; i < ciclosPerdidos; i++) {
+                    agregarMensajeAlDOM(`[Pasado] ${obtenerFraseAleatoria()}`, true);
+                }
+            }
+        } else {
+            // Primera vez que entra a la página
+            agregarMensajeAlDOM("¡Bienvenido por primera vez! El reloj ha comenzado.");
+        }
+
+        // Actualizamos el registro de que el usuario está aquí AHORA
+        localStorage.setItem('ultima_visita', ahora);
+
+        // === BUCLE EN TIEMPO REAL (Mientras la página siga abierta) ===
+        setInterval(() => {
+            // 1. Mostramos el mensaje cada 5 segundos de forma normal
+            agregarMensajeAlDOM(obtenerFraseAleatoria());
+            
+            // 2. Constantemente guardamos la hora en el localStorage.
+            // Si el usuario cierra la pestaña en cualquier momento, se quedará guardado el último segundo exacto.
+            localStorage.setItem('ultima_visita', Date.now());
+        }, 5000);
+
+    </script>
 </body>
 </html>
