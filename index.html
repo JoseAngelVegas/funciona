@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ejemplo de Web Worker Único</title>
+    <title>Ejemplo con Service Worker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,45 +32,62 @@
 </head>
 <body>
 
-    <h2>Mensajes desde el Web Worker</h2>
-    <p>El temporizador corre en segundo plano cada 2 segundos:</p>
+    <h2>Mensajes desde el Service Worker</h2>
+    <p>El Worker se ejecuta en segundo plano. (Abre la consola para ver los mensajes activos).</p>
     
-    <div id="contenedor">
-        </div>
-
-    <script id="codigo-worker" type="javascript/worker">
-        let contador = 1;
-
-        // Usamos un setInterval común y corriente dentro del worker
-        setInterval(() => {
-            self.postMessage("¡Hola! Soy el texto número " + contador);
-            contador++;
-        }, 2000); // 2000 milisegundos = 2 segundos
-    </script>
+    <div id="contenedor"></div>
 
     <script>
         const contenedor = document.getElementById('contenedor');
 
-        // Extraemos el texto del script del worker
-        const textoWorker = document.getElementById('codigo-worker').textContent;
-        
-        // Creamos la URL mágica (Blob)
-        const blob = new Blob([textoWorker], { type: 'application/javascript' });
-        const workerURL = URL.createObjectURL(blob);
-        
-        // Inicializamos el Worker
-        const miWorker = new Worker(workerURL);
+        // 1. Registramos el Service Worker usando un Blob (para mantenerlo en un solo archivo)
+        // Nota: Para producción, es mucho mejor tener un archivo separado llamado 'sw.js'
+        const codigoSW = `
+            let contador = 1;
 
-        // Escuchamos cuando el worker nos mande el texto cada 2 segundos
-        miWorker.onmessage = function(event) {
-            // Creamos un nuevo elemento p en el HTML
-            const nuevoParrafo = document.createElement('p');
-            nuevoParrafo.className = 'mensaje';
-            nuevoParrafo.textContent = event.data;
-            
-            // Lo agregamos al contenedor
-            contenedor.appendChild(nuevoParrafo);
-        };
+            // El Service Worker se activa e instala
+            self.addEventListener('install', (event) => {
+                self.skipWaiting();
+            });
+
+            self.addEventListener('activate', (event) => {
+                event.waitUntil(self.clients.claim());
+                
+                // Iniciamos el bucle. OJO: El navegador podría pausar esto si pasa mucho tiempo cerrada la web
+                setInterval(() => {
+                    console.log("Service Worker activo en segundo plano. Contador: " + contador);
+                    
+                    // Enviamos el mensaje a todas las pestañas abiertas (si las hay)
+                    self.clients.matchAll().then(clients => {
+                        clients.forEach(client => {
+                            client.postMessage({ texto: "¡Hola! Soy el texto número " + contador });
+                        });
+                    });
+                    contador++;
+                }, 2000);
+            });
+        `;
+
+        const blob = new Blob([codigoSW], { type: 'application/javascript' });
+        const swURL = URL.createObjectURL(blob);
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register(swURL).then((registration) => {
+                console.log('Service Worker registrado con éxito en el alcance:', registration.scope);
+            }).catch((error) => {
+                console.error('Fallo al registrar el Service Worker:', error);
+            });
+
+            // 2. Escuchamos los mensajes que envia el Service Worker cuando la página ESTÁ abierta
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                const nuevoParrafo = document.createElement('p');
+                nuevoParrafo.className = 'mensaje';
+                nuevoParrafo.textContent = event.data.texto;
+                contenedor.appendChild(nuevoParrafo);
+            });
+        } else {
+            alert('Tu navegador no soporta Service Workers.');
+        }
     </script>
 
 </body>
