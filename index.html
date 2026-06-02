@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cambio de Color cada 5 Minutos</title>
+    <title>Cambio de Color cada 30 segundos</title>
     <style>
         body {
             display: flex;
@@ -46,11 +46,10 @@
 
         function actualizarContenido() {
             const ahora = new Date();
-            const minutos = ahora.getMinutes();
             const segundos = ahora.getSeconds();
 
             // Calculamos en qué bloque de 5 minutos estamos (Dará un número del 0 al 11)
-            const bloqueDe5Minutos = Math.floor(minutos / 5);
+            const bloqueDe5Minutos = Math.floor(segundos / 30);
 
             // Usamos ese bloque para elegir el color/texto de la lista
             const seleccionActual = opciones[bloqueDe5Minutos];
