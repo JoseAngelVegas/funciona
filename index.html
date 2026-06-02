@@ -3,133 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>funciona - Detector de Sentimientos</title>
+    <title>Ejemplo de Web Worker Único</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f9;
         }
-        .container {
+        #contenedor {
             background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 450px;
-            width: 100%;
-        }
-        h1 { color: #333; margin-bottom: 5px; }
-        p { color: #ffffff; font-size: 14px; margin-bottom: 20px; }
-        textarea {
-            width: 100%;
-            height: 80px;
-            padding: 10px;
-            border: 2px solid #ddd;
+            padding: 15px;
             border-radius: 8px;
-            box-sizing: border-box;
-            resize: none;
-            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 400px;
         }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 15px;
-            width: 100%;
-            transition: background 0.2s;
+        .mensaje {
+            padding: 8px;
+            margin: 5px 0;
+            background-color: #e2f0d9;
+            border-left: 5px solid #70ad47;
+            animation: aparecer 0.3s ease-in;
         }
-        button:hover { background-color: #0056b3; }
-        button:disabled { background-color: #ccc; cursor: not-allowed; }
-        #resultado {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        #estado {
-            font-size: 12px;
-            color: #888;
-            margin-top: 10px;
+        @keyframes aparecer {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>funciona 🤖</h1>
-    <p>Detector de sentimientos en el navegador (Inglés)</p>
+    <h2>Mensajes desde el Web Worker</h2>
+    <p>El temporizador corre en segundo plano cada 2 segundos:</p>
     
-    <textarea id="texto" placeholder="Escribe algo aquí... (ej. I love this project)"></textarea>
-    <button id="btn-analizar" disabled>Cargando IA...</button>
-    
-    <div id="resultado"></div>
-    <div id="estado">Iniciando módulos...</div>
-</div>
+    <div id="contenedor">
+        </div>
 
-<script type="module">
-    import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
+    <script id="codigo-worker" type="javascript/worker">
+        let contador = 1;
 
-    const btn = document.getElementById('btn-analizar');
-    const estado = document.getElementById('estado');
-    const resultado = document.getElementById('resultado');
-    const textoInput = document.getElementById('texto');
+        // Usamos un setInterval común y corriente dentro del worker
+        setInterval(() => {
+            self.postMessage("¡Hola! Soy el texto número " + contador);
+            contador++;
+        }, 2000); // 2000 milisegundos = 2 segundos
+    </script>
 
-    let clasificador;
+    <script>
+        const contenedor = document.getElementById('contenedor');
 
-    // Inicializar el modelo al cargar la página
-    async function inicializarIA() {
-        try {
-            estado.innerText = "Descargando modelo de IA (esto toma unos segundos la primera vez)...";
-            clasificador = await pipeline('text-classification');
-            estado.innerText = "¡IA lista para usar localmente!";
-            btn.disabled = false;
-            btn.innerText = "Analizar Sentimiento";
-        } catch (error) {
-            estado.innerText = "Error al cargar la IA: " + error.message;
-        }
-    }
+        // Extraemos el texto del script del worker
+        const textoWorker = document.getElementById('codigo-worker').textContent;
+        
+        // Creamos la URL mágica (Blob)
+        const blob = new Blob([textoWorker], { type: 'application/javascript' });
+        const workerURL = URL.createObjectURL(blob);
+        
+        // Inicializamos el Worker
+        const miWorker = new Worker(workerURL);
 
-    // Función que se ejecuta al hacer clic en el botón
-    async function analizar() {
-        const texto = textoInput.value.trim();
-        if (!texto) return alert("Por favor escribe algo");
-
-        btn.disabled = true;
-        btn.innerText = "Analizando...";
-        resultado.innerText = "";
-
-        try {
-            const res = await clasificador(texto);
-            const { label, score } = res[0];
-            const confianza = (score * 100).toFixed(2);
-
-            if (label === 'POSITIVE') {
-                resultado.innerHTML = `🟢 POSITIVO <br><span style="font-size:14px; color:#fffff;">Confianza: ${confianza}%</span>`;
-            } else {
-                resultado.innerHTML = `🔴 NEGATIVO <br><span style="font-size:14px; color:#fffff;">Confianza: ${confianza}%</span>`;
-            }
-        } catch (error) {
-            resultado.innerText = "Error en el análisis.";
-        }
-
-        btn.disabled = false;
-        btn.innerText = "Analizar Sentimiento";
-    }
-
-    // Asignar el evento al botón
-    btn.addEventListener('click', analizar);
-
-    // Arrancar el proceso
-    inicializarIA();
-</script>
+        // Escuchamos cuando el worker nos mande el texto cada 2 segundos
+        miWorker.onmessage = function(event) {
+            // Creamos un nuevo elemento p en el HTML
+            const nuevoParrafo = document.createElement('p');
+            nuevoParrafo.className = 'mensaje';
+            nuevoParrafo.textContent = event.data;
+            
+            // Lo agregamos al contenedor
+            contenedor.appendChild(nuevoParrafo);
+        };
+    </script>
 
 </body>
 </html>
