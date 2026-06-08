@@ -13,7 +13,6 @@
         }
         .contenedor {
             text-align: center;
-            background: white;
             padding: 20px;
             border-radius: 10px;
         }
@@ -34,18 +33,18 @@
 // ESTA ES LA LISTA DE COLORES Y TEXTO (aleatorio)
         
         const opciones = [
-            { color: "#FF5733", texto: "¡Momento de energía!", imagen: "https://github.com/JoseAngelVegas/funciona/blob/main/SOLUCI%C3%93N%20Textura.png?raw=true"},
-            { color: "#33FF57", texto: "¡Momento de calma!", imagen: "https://github.com/JoseAngelVegas/funciona/blob/main/SOLUCI%C3%93N%20Textura.png?raw=true" },
-            { color: "#3357FF", texto: "¡Momento de concentración!", imagen: "https://github.com/JoseAngelVegas/funciona/blob/main/SOLUCI%C3%93N%20Textura.png?raw=true" },
-            { color: "#F3FF33", texto: "¡Momento de creatividad!", imagen: "https://github.com/JoseAngelVegas/funciona/blob/main/SOLUCI%C3%93N%20Textura.png?raw=true" },
-            { color: "#9B33FF", texto: "¡Momento de misterio!", imagen: "https://github.com/JoseAngelVegas/funciona/blob/main/SOLUCI%C3%93N%20Textura.png?raw=true" },
-            { color: "#FF339B", texto: "¡Momento de romance!", imagen: "https://github.com/JoseAngelVegas/funciona/blob/main/SOLUCI%C3%93N%20Textura.png?raw=true" },
-            { color: "#33FFF0", texto: "¡Momento de frescura!", imagen: "https://github.com/JoseAngelVegas/funciona/blob/main/SOLUCI%C3%93N%20Textura.png?raw=true" },
-            { color: "#FFAF33", texto: "¡Momento de alegría!", imagen: "https://github.com/JoseAngelVegas/funciona/blob/main/SOLUCI%C3%93N%20Textura.png?raw=true" },
-            { color: "#AF33FF", texto: "¡Momento de probar!", imagen: "https://github.com/JoseAngelVegas/funciona/blob/main/SOLUCI%C3%93N%20Textura.png?raw=true" },
-            { color: "#33FFAF", texto: "¡Momento de naturaleza!", imagen: "https://github.com/JoseAngelVegas/funciona/blob/main/SOLUCI%C3%93N%20Textura.png?raw=true" },
-            { color: "#FF3333", texto: "¡Momento de pasión!", imagen: "https://github.com/JoseAngelVegas/funciona/blob/main/SOLUCI%C3%93N%20Textura.png?raw=true" },
-            { color: "#3366FF", texto: "¡Momento de paz!", imagen: "https://github.com/JoseAngelVegas/funciona/blob/main/SOLUCI%C3%93N%20Textura.png?raw=true" }
+            { color: "#FF5733", texto: "¡Momento de energía!" },
+            { color: "#33FF57", texto: "¡Momento de calma!" },
+            { color: "#3357FF", texto: "¡Momento de concentración!" },
+            { color: "#F3FF33", texto: "¡Momento de creatividad!"},
+            { color: "#9B33FF", texto: "¡Momento de misterio!" },
+            { color: "#FF339B", texto: "¡Momento de romance!" },
+            { color: "#33FFF0", texto: "¡Momento de frescura!" },
+            { color: "#FFAF33", texto: "¡Momento de alegría!" },
+            { color: "#AF33FF", texto: "¡Momento de probar!" },
+            { color: "#33FFAF", texto: "¡Momento de naturaleza!" },
+            { color: "#FF3333", texto: "¡Momento de pasión!" },
+            { color: "#3366FF", texto: "¡Momento de paz!" }
         ];
 
         function actualizarContenido() {
@@ -60,8 +59,7 @@
             const seleccionActual = opciones[bloqueDe5Minutos];
 
             // Aplicamos los cambios visuales en la página
-            document.body.style.backgroundColor = seleccionActual.color;
-            document.getElementById("imagen").innerText = seleccionActual.imagen;
+            document.contenedor.style.background = seleccionActual.color;
             document.getElementById("texto").innerText = seleccionActual.texto;
             
             // Opcional: Mostramos la hora en pantalla para comprobar que funciona
