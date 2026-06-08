@@ -28,9 +28,7 @@
     </div>
 
     <script>
-        
-// ESTA ES LA LISTA DE COLORES Y TEXTO (aleatorio)
-        
+                
         const opciones = [
             { color: "#FF5733", texto: "¡Momento de energía!" },
             { color: "#33FF57", texto: "¡Momento de calma!" },
@@ -51,24 +49,18 @@
             const ahora = new Date();
             const segundos = ahora.getSeconds();
 
-            // Calculamos en qué bloque de 5 minutos estamos (Dará un número del 0 al 11)
             const bloqueDe5Minutos = Math.floor(segundos / 5);
 
-            // Usamos ese bloque para elegir el color/texto de la lista
             const seleccionActual = opciones[bloqueDe5Minutos];
 
-            // Aplicamos los cambios visuales en la página
             document.contenedor.style.background = seleccionActual.color;
             document.getElementById("texto").innerText = seleccionActual.texto;
             
-            // Opcional: Mostramos la hora en pantalla para comprobar que funciona
             document.getElementById("reloj").innerText = `Hora del dispositivo: ${ahora.toLocaleTimeString()}`;
         }
 
-        // Ejecutar la función nada más abrir la página
         actualizarContenido();
 
-        // Revisar el reloj del dispositivo cada 1 segundo para cambiar el contenido justo a tiempo
         setInterval(actualizarContenido, 1000);
     </script>
 </body>
