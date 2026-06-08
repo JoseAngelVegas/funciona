@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Cambio de Color cada 5 segundos</title>
+    <title>No hay nombre</title>
+    
     <style>
         body {
             display: flex;
@@ -10,7 +9,7 @@
             align-items: center;
             height: 100vh;
             font-family: Arial, sans-serif;
-            transition: background-color 0.5s ease; /* Transición suave de color */
+            transition: background-color 0.5s ease;
         }
         .contenedor {
             text-align: center;
@@ -19,7 +18,9 @@
             border-radius: 10px;
         }
     </style>
+    
 </head>
+
 <body>
 
     <div class="contenedor">
@@ -28,9 +29,11 @@
     </div>
 
     <script>
-        // Lista de colores y textos (puedes poner los que quieras)
+        
+// ESTA ES LA LISTA DE COLORES Y TEXTO (aleatorio)
+        
         const opciones = [
-            { color: "#FF5733", texto: "¡Momento de energía!" },
+            { color: "#FF5733", texto: "¡Momento de energía!", },
             { color: "#33FF57", texto: "¡Momento de calma!" },
             { color: "#3357FF", texto: "¡Momento de concentración!" },
             { color: "#F3FF33", texto: "¡Momento de creatividad!" },
@@ -45,6 +48,7 @@
         ];
 
         function actualizarContenido() {
+            
             const ahora = new Date();
             const segundos = ahora.getSeconds();
 
