@@ -24,7 +24,7 @@
 <body>
 
     <div class="contenedor">
-        <h1 id="texto">¿por qué no funciona?</h1>
+        <h1 id="texto">¿por qué no funciona??</h1>
         <p id="reloj"></p>
     </div>
 
@@ -54,7 +54,7 @@
 
             const seleccionActual = opciones[bloqueDe5Minutos];
 
-            document.contenedor.style.backgroundColor = seleccionActual.color;
+            document.body.style.backgroundColor = seleccionActual.color;
             document.getElementById("texto").innerText = seleccionActual.texto;
             
             document.getElementById("reloj").innerText = `Hora del dispositivo: ${ahora.toLocaleTimeString()}`;
