@@ -10,10 +10,10 @@
             align-items: center;
             height: 100vh;
             font-family: Arial, sans-serif;
-            transition: background-color 0.5s ease;
+           
         }
         .contenedor {
-            background-color: white;
+            background-color: #;
             text-align: center;
             padding: 20px;
             border-radius: 10px;
@@ -33,18 +33,18 @@
     <script>
                 
         const opciones = [
-            { color: "#FF5733", texto: "¡Momento de energía!" },
-            { color: "#33FF57", texto: "¡Momento de calma!" },
-            { color: "#3357FF", texto: "¡Momento de concentración!" },
-            { color: "#F3FF33", texto: "¡Momento de creatividad!"},
-            { color: "#9B33FF", texto: "¡Momento de misterio!" },
-            { color: "#FF339B", texto: "¡Momento de romance!" },
-            { color: "#33FFF0", texto: "¡Momento de frescura!" },
-            { color: "#FFAF33", texto: "¡Momento de alegría!" },
-            { color: "#AF33FF", texto: "¡Momento de probar!" },
-            { color: "#33FFAF", texto: "¡Momento de naturaleza!" },
-            { color: "#FF3333", texto: "¡Momento de pasión!" },
-            { color: "#3366FF", texto: "¡Momento de paz!" }
+            { texto: "¡Momento de energía!" },
+            { texto: "¡Momento de calma!" },
+            { texto: "¡Momento de concentración!" },
+            { texto: "¡Momento de creatividad!"},
+            { texto: "¡Momento de misterio!" },
+            { texto: "¡Momento de romance!" },
+            { texto: "¡Momento de frescura!" },
+            { texto: "¡Momento de alegría!" },
+            { texto: "¡Momento de probar!" },
+            { texto: "¡Momento de naturaleza!" },
+            { texto: "¡Momento de pasión!" },
+            { texto: "¡Momento de paz!" }
         ];
 
         function actualizarContenido() {
@@ -56,10 +56,8 @@
 
             const seleccionActual = opciones[bloqueDe5Minutos];
 
-            document.body.style.backgroundColor = seleccionActual.color;
             document.getElementById("texto").innerText = seleccionActual.texto;
             
-            document.getElementById("reloj").innerText = `Hora del dispositivo: ${ahora.toLocaleTimeString()}`;
         }
 
         actualizarContenido();
