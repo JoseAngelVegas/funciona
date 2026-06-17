@@ -29,6 +29,7 @@
 
     <div>
         <p id="texto" style="color: #858ff1; font-size: 20px">Esto debería funcionar...</p>
+        <p id="texto" style="color: #858ff1; font-size: 20px">Esto debería funcionar...</p>
     </div>
 
     <script>
@@ -42,10 +43,10 @@
             { texto: "¡Momento de romance!" },
             { texto: "¡Momento de frescura!" },
             { texto: "¡Momento de alegría!" },
-            { texto: "¡Momento de probar!" },
-            { texto: "¡Momento de naturaleza!" },
-            { texto: "¡Momento de pasión!" },
-            { texto: "¡Momento de paz!" }
+            { texto2: "¡Momento de probar!" },
+            { texto2: "¡Momento de naturaleza!" },
+            { texto2: "¡Momento de pasión!" },
+            { texto2: "¡Momento de paz!" }
         ];
 
         function actualizarContenido() {
@@ -58,12 +59,16 @@
             const seleccionActual = opciones[bloqueDe5Minutos];
 
             document.getElementById("texto").innerText = seleccionActual.texto;
+            document.getElementById("texto").innerText = seleccionActual.texto2;
+
             
         }
 
         actualizarContenido();
 
         setInterval(actualizarContenido, 1000);
+
+        
 
     </script>
 </body>
