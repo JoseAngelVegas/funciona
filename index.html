@@ -34,7 +34,7 @@
 
     <script>
                 
-        const opciones1 = [
+        const opciones = [
             { texto: "¡Momento de energía!" },
             { texto: "¡Momento de calma!" },
             { texto: "¡Momento de concentración!" },
@@ -44,14 +44,6 @@
             { texto: "¡Momento de frescura!" },
             { texto: "¡Momento de alegría!" },
                     ];
-
-        const opciones2 = [
-            
-            { texto2: "¡Momento de probar!" },
-            { texto2: "¡Momento de naturaleza!" },
-            { texto2: "¡Momento de pasión!" },
-            { texto2: "¡Momento de paz!" }
-        ];
 
         function actualizarContenido() {
             
@@ -63,7 +55,6 @@
             const seleccionActual = opciones[bloqueDe5Minutos];
 
             document.getElementById("texto").innerText = seleccionActual.texto;
-            document.getElementById("texto2").innerText = seleccionActual.texto2;
 
             
         }
@@ -71,6 +62,26 @@
         actualizarContenido();
 
         setInterval(actualizarContenido, 1000);
+
+             const opciones2 = [
+            
+            { texto2: "¡Momento de probar!" },
+            { texto2: "¡Momento de naturaleza!" },
+            { texto2: "¡Momento de pasión!" },
+            { texto2: "¡Momento de paz!" }
+        ];
+
+         function actualizarContenido2() {
+            
+            const ahora = new Date();
+            const segundos = ahora.getSeconds();
+
+            const bloqueDe5Minutos = Math.floor(segundos / 5);
+
+            const seleccionActual = opciones[bloqueDe5Minutos];
+
+            document.getElementById("texto2").innerText = seleccionActual.texto2;
+
 
         
 
