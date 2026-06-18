@@ -1,0 +1,83 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cambio de Color cada 5 Minutos</title>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            transition: background-color 0.5s ease; /* Transición suave de color */
+
+        }
+        .contenedor {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            
+
+        }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor">
+        <h1 id="texto">Cargando...</h1>
+        <p id="reloj"></p>
+    </div>
+
+    <script>
+
+const opciones = [
+            { color: "#FF5733", texto: "¡Momento de energía!" },
+            { color: "#33FF57", texto: "¡Momento de calma!" },
+            { color: "#3357FF", texto: "¡Momento de concentración!" },
+            { color: "#F3FF33", texto: "¡Momento de creatividad!" },
+            { color: "#9B33FF", texto: "¡Momento de misterio!" },
+            { color: "#FF339B", texto: "¡Momento de romance!" },
+            { color: "#33FFF0", texto: "¡Momento de frescura!" },
+            { color: "#FFAF33", texto: "¡Momento de alegría!" },
+            { color: "#AF33FF", texto: "¡Momento de magia!" },
+            { color: "#33FFAF", texto: "¡Momento de naturaleza!" },
+            { color: "#FF3333", texto: "¡Momento de pasión!" },
+            { color: "#3366FF", texto: "¡Momento de paz!" }
+        ];
+
+        function actualizarContenido() {
+            const ahora = new Date();
+            const segundos = ahora.getSeconds();
+
+
+
+
+            const bloqueDe5Minutos = Math.floor(segundos / 5);
+
+
+            const seleccionActual = opciones[bloqueDe5Minutos];
+
+
+
+            // Aplicamos los cambios visuales en la página
+            document.body.style.backgroundColor = seleccionActual.color;
+            document.getElementById("texto").innerText = seleccionActual.texto;
+            
+            // Opcional: Mostramos la hora en pantalla para comprobar que funciona
+            document.getElementById("reloj").innerText = `Hora del dispositivo: ${ahora.toLocaleTimeString()}`;
+
+
+
+        }
+
+        // Ejecutar la función nada más abrir la página
+        actualizarContenido();
+
+
+    // Revisar el reloj del dispositivo cada 1 segundo para cambiar el contenido justo a tiempo
+        setInterval(actualizarContenido, 1000);
+    </script>
+</body>
+</html>
