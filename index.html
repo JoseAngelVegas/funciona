@@ -29,20 +29,16 @@
 
     <div>
         <p id="texto" style="color: #858ff1; font-size: 20px">Esto debería funcionar...</p>
-        <p id="texto2" style="color: #858ff1; font-size: 20px">Esto debería funcionar...</p>
+        <p id="mensaje" style="color: #858ff1; font-size: 20px">Esto debería funcionar...</p>
     </div>
 
     <script>
                 
         const opciones = [
-            { texto: "¡Momento de energía!" },
-            { texto: "¡Momento de calma!" },
-            { texto: "¡Momento de concentración!" },
-            { texto: "¡Momento de creatividad!"},
-            { texto: "¡Momento de misterio!" },
-            { texto: "¡Momento de romance!" },
-            { texto: "¡Momento de frescura!" },
-            { texto: "¡Momento de alegría!" },
+            { texto: "¡Momento de energía!" , mensaje: "Hola"},
+            { texto: "¡Momento de calma!" , mensaje: "Jeje"},
+            { texto: "¡Momento de concentración!" , mensaje: "XD" },
+          
                     ];
 
         function actualizarContenido() {
@@ -55,6 +51,7 @@
             const seleccionActual = opciones[bloqueDe5Minutos];
 
             document.getElementById("texto").innerText = seleccionActual.texto;
+            document.getElementById("mensaje").innerText = seleccionActual.mensaje;
 
             
         }
@@ -64,35 +61,6 @@
         setInterval(actualizarContenido, 1000);
 
     </script>
-
-    <script>
-
-             const opciones2 = [
-            
-            { texto2: "¡Momento de probar!" },
-            { texto2: "¡Momento de naturaleza!" },
-            { texto2: "¡Momento de pasión!" },
-            { texto2: "¡Momento de paz!" }
-        ];
-
-         function actualizarContenido2() {
-            
-            const ahora2 = new Date();
-            const segundos2 = ahora.getSeconds();
-
-            const bloqueDe5Minutos2 = Math.floor(segundos / 5);
-
-            const seleccionActual2 = opciones2[bloqueDe5Minutos];
-
-            document.getElementById("texto2").innerText = seleccionActual.texto2;
-
-  }
-
-        actualizarContenido2();
-
-        setInterval(actualizarContenido2, 1000);
-        
-
-    </script>
+    
 </body>
 </html>
