@@ -51,9 +51,9 @@
         function actualizarContenido() {
             
             const ahora = new Date();
-            const segundos = ahora.getSeconds();
+            const dia = ahora.getDay();
 
-            const bloqueDe5Minutos = Math.floor(segundos / 5);
+            const bloqueDe5Minutos = Math.floor(dia / 1);
 
             const seleccionActual = opciones[bloqueDe5Minutos];
 
