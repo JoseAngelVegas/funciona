@@ -69,6 +69,61 @@
         setInterval(actualizarContenido, 1000);
 
     </script>
+
+<script>
+
+    const opcion = [
+        
+            { color: "#332b54" },
+            { color: "#452b52" },
+            { color: "#845b12" },
+            { color: "#422b54" },
+
+            { color: "#33784" },
+            { color: "#452b52" },
+            { color: "#845b12" },
+            { color: "#422b54" },
+
+         { color: "#33784" },
+            { color: "#452b52" },
+            { color: "#845b12" },
+            { color: "#422b54" },
+
+         { color: "#33784" },
+            { color: "#452b52" },
+            { color: "#845b12" },
+            { color: "#422b54" },
+
+         { color: "#33784" },
+            { color: "#452b52" },
+            { color: "#845b12" },
+            { color: "#422b54" },
+
+         { color: "#33784" },
+            { color: "#452b52" },
+            { color: "#845b12" },
+            { color: "#422b54" },
+            
+                    ]
+
+        function actualizarColor() {
+            
+            const ahora = new Date();
+            const hora = ahora.getHour();
+
+            const cambio = Math.floor(hora / 1);
+
+            const seleccion = opcion[cambio];
+
+            document.body.style.backgroundColor = seleccion.color;
+            
+        }
+
+        actualizarColor();
+
+        setInterval(actualizarColor, 1000);
+    
+</script>
     
 </body>
 </html>
