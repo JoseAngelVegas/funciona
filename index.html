@@ -8,7 +8,7 @@
             justify-content: center;
             align-items: center;
             font-family: Arial, sans-serif;
-           
+            background-color: #ffb970;
         }
 
         div {
@@ -18,8 +18,12 @@
             border-radius: 2px;
             width: 500px;
             height: 500px;
-
         }
+        
+        .texto {
+         animation-name: animar;
+         animation-duration: 5s
+         }
 
         @keyframes bounce {
      0% {top:200px; opacity: 0%}
@@ -27,9 +31,10 @@
        
     }
     
-.animar {
-animation: 1s bounce;
-}
+@keyframes animar {
+0 {color: white}
+100% {color: black} 
+ }
         
     </style>
     
@@ -38,7 +43,7 @@ animation: 1s bounce;
 <body>
 
     <div>
-        <p id="texto" style="color: #858ff1; font-size: 20px">Esto debería funcionar...</p>
+        <p class="texto" id="texto" style="color: #858ff1; font-size: 20px">Esto debería funcionar...</p>
     </div>
 
     <p id="mensaje" style="font-size: 20px">Acá hay un mensaje</p>
@@ -62,15 +67,14 @@ animation: 1s bounce;
         function actualizarContenido() {
             
             const ahora = new Date();
-            const dia = ahora.getDay();
+            const dia = ahora.getSeconds();
 
-            const bloqueDe5Minutos = Math.floor(dia / 1);
+            const bloqueDe5Minutos = Math.floor(dia / 5);
 
             const seleccionActual = opciones[bloqueDe5Minutos];
 
             document.getElementById("texto").innerText = seleccionActual.texto;
             document.getElementById("mensaje").innerText = seleccionActual.mensaje;
-
             
         }
 
@@ -79,8 +83,8 @@ animation: 1s bounce;
         setInterval(actualizarContenido, 1000);
 
     </script>
-
-<script>
+    
+  <script>
 
     const opcion = [
         
@@ -121,8 +125,6 @@ animation: 1s bounce;
             const seleccion = opcion[cambio];
 
             document.body.style.backgroundColor = seleccion.color;
-            list.add("animar");
-
             
         }
 
