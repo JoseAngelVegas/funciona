@@ -20,6 +20,16 @@
             height: 500px;
 
         }
+
+        @keyframes bounce {
+     0% {top:200px; opacity: 0%}
+     100% {top:0px; opacity: 100%}
+       
+    }
+    
+.animar {
+animation: 1s bounce;
+}
         
     </style>
     
@@ -111,6 +121,8 @@
             const seleccion = opcion[cambio];
 
             document.body.style.backgroundColor = seleccion.color;
+            list.add("animar");
+
             
         }
 
@@ -119,6 +131,29 @@
         setInterval(actualizarColor, 1000);
     
 </script>
+
+
+<body>
+<h1>The DOMToken Object</h1>
+<h2>The add() Method</h2>
+
+<button onclick="myFunction()">Add</button>
+<p>Click "Add" to add the "myStyle" class to myDIV.</p>
+
+<div id="myDIV">
+<p>I am a myDIV.</p>
+</div>
+
+<script>
+function myFunction() {
+  const list = document.getElementById("myDIV").classList;
+  list.add("animar");
+}
+</script>
+
+</body>
+</html>
+
     
 </body>
 </html>
