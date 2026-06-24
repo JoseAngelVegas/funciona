@@ -121,10 +121,6 @@
 
     <script>
 
-        // Source - https://stackoverflow.com/a/45036752
-// Posted by user, modified by community. See post 'Timeline' for change history
-// Retrieved 2026-06-24, License - CC BY-SA 4.0
-
 function reset_animation() {
   var el = document.getElementById('animated');
   el.style.animation = 'none';
@@ -143,12 +139,11 @@ function reset_animation() {
   top: 70px;
   width: 50px; height: 50px;
   background-color: black;
-  animation: bounce 3s ease-in-out infinite;
+  animation: bounce 3s ease-in-out;
 }
 @keyframes bounce {
-  0% { left: 0; }
-  50% { left: calc( 100% - 50px ); }
-  100% { left: 0; }
+  0% { left: 0%; }
+  100% { left: 100%; }
 }
 </style>
 
