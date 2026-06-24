@@ -125,7 +125,9 @@ function reset_animation() {
   var el = document.getElementById('animated');
   el.style.animation = 'none';
   el.offsetHeight; /* trigger reflow */
-  el.style.animation = null; 
+  el.style.animation = null;
+  
+  document.getElementById('animated').style.animationPlayState = "running"
 }
     </script>
 
