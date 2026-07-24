@@ -12,8 +12,8 @@
 
  <div></div>
 
-  <img id="animacion" class="video" onclick="Josechicha()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Josechicha.png?raw=true" width="0" height="0">
-  <img id="animacion" class="video" onclick="Nosotros()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/La%20Superioridad%20De%20NOSOTROS.png?raw=true" width="0" height="0">
+  <img id="animacion1" class="video" onclick="Josechicha()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Josechicha.png?raw=true" width="0" height="0">
+  <img id="animacion2" class="video" onclick="Nosotros()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/La%20Superioridad%20De%20NOSOTROS.png?raw=true" width="0" height="0">
 
  <script>
 
@@ -65,12 +65,14 @@
   <script>
   
    function videoAnimacion() {
-  var el = document.getElementById('animacion');
+  var el = document.getElementById('animacion1');
   el.style.animation = 'none';
   el.offsetHeight;
   el.style.animation = null;
   
-  document.getElementById('animacion').style.animationPlayState = "running"
+  document.getElementById('animacion1').style.animationPlayState = "running"
+    document.getElementById('animacion2').style.animationPlayState = "running"
+
   
 }
   
@@ -106,18 +108,25 @@
     transform: translateY(-100%);
     }
     
-    #animacion {
+    #animacion1 {
   position: relative;
-  animation: bounce 5s;
+  animation: bounce 0.3s;
   animation-fill-mode: both;
   animation-play-state: paused;
 
+}
+
+#animacion2 {
+  position: relative;
+  animation: bounce 0.5s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
 
 }
 
 @keyframes bounce {
-  0% { width: 0%; }
-  100% { width: 50%; }
+  0% { top: -10px; }
+  100% { top: -100px; }
 }
 
       body {
