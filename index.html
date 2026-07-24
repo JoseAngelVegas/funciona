@@ -1,156 +1,143 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <title>No hay nombre</title>
-    
-    <style>
-        body {
-            justify-content: center;
-            align-items: center;
-            font-family: Arial, sans-serif;
-            background-color: #ffb970;
-            transition: background-color 0.5s;
-        }
 
-        div {
-
-        background-color: #1c7d80;
-            text-align: center;
-            border-radius: 2px;
-            width: 500px;
-            height: 500px;
-      }
-      
-    </style>
-    
-</head>
+<html>
 
 <body>
 
-    <div>
-        <p class="texto" id="texto" style="color: #858ff1; font-size: 20px">Esto debería funcionar...</p>
-    </div>
+<head>
 
-    <p id="mensaje" style="font-size: 20px">Acá hay un mensaje</p>
+ <img class="menu" onclick="audio()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Audio.png?raw=true" width="150" height="150">
+ <img class="menu" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Texto.png?raw=true" width="150" height="150">
+ <img class="menu" onclick="video(), videoAnimacion()"  src="https://github.com/JoseAngelVegas/ampamix/blob/main/Videos.png?raw=true" width="150" height="150">
 
-    <script>
-                
-        const opciones = [
-        
-             { texto: "¡Momento de energía!" , mensaje: "Hola 1" },
-            { texto: "¡Momento de calma!" , mensaje: "Hola 2" },
-            { texto: "¡Momento de concentración!" , mensaje: "Hola 3" },
-            { texto: "¡Momento de energía!" , mensaje: "Hola 4" },
-            { texto: "¡Momento de calma!" , mensaje: "Hola 5" },
-            { texto: "¡Momento de concentración!" , mensaje: "Hola 6" },
-            { texto: "¡Momento de energía!" , mensaje: "Hola 7" },
-            { texto: "¡Momento de calma!" , mensaje: "Hola 8" },
-            { texto: "¡Momento de concentración!" , mensaje: "Hola 9" },
-            
-                    ]
+ <div></div>
 
-        function actualizarContenido() {
-            
-            const ahora = new Date();
-            const dia = ahora.getSeconds();
+  <img id="animacion" class="video" onclick="Josechicha()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Josechicha.png?raw=true" width="0" height="0">
+  <img id="animacion" class="video" onclick="Nosotros()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/La%20Superioridad%20De%20NOSOTROS.png?raw=true" width="0" height="0">
 
-            const bloqueDe5Minutos = Math.floor(dia / 5);
+ <script>
 
-            const seleccionActual = opciones[bloqueDe5Minutos];
+  function audio() {
 
-            document.getElementById("texto").innerText = seleccionActual.texto;
-            document.getElementById("mensaje").innerText = seleccionActual.mensaje;
-            
-        }
+      const cerrarInicio = document.querySelectorAll(".menu");
+      for (let i = 0; i < cerrarInicio.length; i++) {
+         cerrarInicio[i].style.width = "0px";
+         cerrarInicio[i].style.height = "0px";
+         cerrarInicio[i].style.visibility = "hidden";
+         
+      }
+  }
 
-        actualizarContenido();
+  function texto() {
 
-        setInterval(actualizarContenido, 1000);
+      const cerrarInicio = document.querySelectorAll(".menu");
+      for (let i = 0; i < cerrarInicio.length; i++) {
+         cerrarInicio[i].style.width = "0px";
+         cerrarInicio[i].style.height = "0px";
+         cerrarInicio[i].style.visibility = "hidden";
+         
+      }
+  }
 
-    </script>
-    
+  function video() {
+
+      const cerrarInicio = document.querySelectorAll(".menu");
+      for (let i = 0; i < cerrarInicio.length; i++) {
+         cerrarInicio[i].style.filter = "blur(5px)";
+         cerrarInicio[i].style.width = "80px";
+         cerrarInicio[i].style.height = "80px";
+         
+         
+      }
+
+    const abrir = document.querySelectorAll(".video");
+      for (let i = 0; i < abrir.length; i++) {
+         abrir[i].style.width = "120px";
+         abrir[i].style.height = "120px";
+         
+      }
+      
+      
+  }
+
+  </script>
+  
   <script>
-
-    const opcion = [
-        
-            { color: "#332b54" },
-            { color: "#452b52" },
-            { color: "#845b12" },
-            { color: "#422b54" },
-            { color: "#33784" },
-            { color: "#452b52" },
-            { color: "#845b12" },
-            { color: "#422b54" },
-            { color: "#33784" },
-            { color: "#452b52" },
-            { color: "#845b12" },
-            { color: "#422b54" },
-            { color: "#33784" },
-            { color: "#452b52" },
-            { color: "#845b12" },
-            { color: "#422b54" },
-            { color: "#33784" },
-            { color: "#452b52" },
-            { color: "#845b12" },
-            { color: "#422b54" },
-            { color: "#33784" },
-            { color: "#452b52" },
-            { color: "#845b12" },
-            { color: "#422b54" },
-            
-                    ]
-
-        function actualizarColor() {
-            
-            const ahora = new Date();
-            const hora = ahora.getSeconds();
-
-            const cambio = Math.floor(hora / 5);
-
-            const seleccion = opcion[cambio];
-
-            document.body.style.backgroundColor = seleccion.color;
-            
-        }
-
-        actualizarColor();
-
-        setInterval(actualizarColor, 1000);
-    
-</script>
-
-    <script>
-
-function reset_animation() {
-  var el = document.getElementById('animated');
+  
+   function videoAnimacion() {
+  var el = document.getElementById('animacion');
   el.style.animation = 'none';
-  el.offsetHeight; /* trigger reflow */
+  el.offsetHeight;
   el.style.animation = null;
   
-  document.getElementById('animated').style.animationPlayState = "running"
+  document.getElementById('animacion').style.animationPlayState = "running"
+  
 }
-    </script>
+  
+  </script>
 
-<div id="animated"></div>
-<button onclick="reset_animation()">Reset</button>
 
-<style>
+   <style>
 
-#animated {
-  position: absolute;
-  top: 70px;
-  width: 50px; height: 50px;
-  background-color: black;
-  animation: bounce 3s;
+    .menu {
+     box-shadow: 0px 0px 5px black;
+    border-radius: 20px;
+    margin: 0 auto;
+    display: flex;
+    transform: translateY(50%);
+     
+    }
+
+    div {
+     background-color: black;
+     width: %;
+     height: %;
+     opacity: 50%;
+     position: fixed;
+     top: 7px;
+    }
+
+    .video {
+    position: relative;
+    box-shadow: 0px 5px 20px black;
+    border-radius: 100px;
+    margin: 0 auto;
+    display: flex;
+    transform: translateY(-100%);
+    }
+    
+    #animacion {
+  position: relative;
+  animation: bounce 5s;
   animation-fill-mode: both;
-animation-play-state: paused;
+  animation-play-state: paused;
+
 
 }
+
 @keyframes bounce {
-  0% { left: 0%; }
-  100% { left: 50%; }
+  0% { width: 0%; }
+  100% { width: 50%; }
 }
+
+      body {
+background: #58df8c;
+background: -webkit-linear-gradient(95deg, rgba(88, 223, 140, 1) 0%, rgba(91, 203, 207, 1) 44%, rgba(99, 201, 162, 1) 80%, rgba(83, 237, 219, 1) 100%);
+background: -moz-linear-gradient(95deg, rgba(88, 223, 140, 1) 0%, rgba(91, 203, 207, 1) 44%, rgba(99, 201, 162, 1) 80%, rgba(83, 237, 219, 1) 100%);
+background: linear-gradient(95deg, rgba(88, 223, 140, 1) 0%, rgba(91, 203, 207, 1) 44%, rgba(99, 201, 162, 1) 80%, rgba(83, 237, 219, 1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#58DF8C", endColorstr="#53EDDB", GradientType=0);
+      }
+
+   @media only screen and (max-width:500px) {
+            .button, .submit, .mas, .input {
+               width: 40%;
+            }
+         }
+
 </style>
 
 </body>
+
+</head>
+
 </html>
