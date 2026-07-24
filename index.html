@@ -6,9 +6,9 @@
 
 <head>
 
- <img class="menu" onclick="audio()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Audio.png?raw=true" width="150" height="150">
- <img class="menu" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Texto.png?raw=true" width="150" height="150">
- <img class="menu" onclick="video(), videoAnimacion()"  src="https://github.com/JoseAngelVegas/ampamix/blob/main/Videos.png?raw=true" width="150" height="150">
+ <img id="animacionCerrar1" class="menu" onclick="audio()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Audio.png?raw=true" width="150" height="150">
+ <img id="animacionCerrar2" class="menu" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Texto.png?raw=true" width="150" height="150">
+ <img id="animacionCerrar3" class="menu" onclick="video(), videoAnimacion()"  src="https://github.com/JoseAngelVegas/ampamix/blob/main/Videos.png?raw=true" width="150" height="150">
 
  <div></div>
 
@@ -72,6 +72,11 @@
   
   document.getElementById('animacion1').style.animationPlayState = "running"
     document.getElementById('animacion2').style.animationPlayState = "running"
+    
+ document.getElementById('animacionCerrar1').style.animationPlayState = "running"
+    document.getElementById('animacionCerrar2').style.animationPlayState = "running"
+    
+ document.getElementById('animacionCerrar3').style.animationPlayState = "running"
 
   
 }
@@ -124,9 +129,38 @@
 
 }
 
+#animacionCerrar1 {
+  position: relative;
+  animation: cerrar 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+
+}
+
+#animacionCerrar2 {
+  position: relative;
+  animation: cerrar 0.3s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+
+}
+
+#animacionCerrar3 {
+  position: relative;
+  animation: cerrar 0.4s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+
+}
+
+@keyframes cerrar {
+  0% { width: 150px; height: 150px; }
+  100% { width: 80px; height: 80px; }
+}
+
 @keyframes bounce {
-  0% { top: -10px; }
-  100% { top: -100px; }
+  0% { top: -10px; width: 0px; height: 0px; }
+  100% { top: -100px; width: 120px; height: 120px; }
 }
 
       body {
