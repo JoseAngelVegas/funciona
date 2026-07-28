@@ -1,186 +1,164 @@
 <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cubo 3D interactivo (Mouse / Giroscopio)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<html>
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            perspective: 1000px;
+        }
 
+        #info {
+            position: absolute;
+            top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+            padding: 0 15px;
+        }
+
+        /* Contenedor 3D */
+        .scene {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        /* El Cubo */
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transform: translateZ(-100px);
+            transition: transform 0.1s ease-out; /* Suavizado de movimiento */
+        }
+
+        /* Caras del Cubo */
+        .cube__face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid #fff;
+            font-size: 40px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.85;
+        }
+
+        .cube__face--front  { background: rgba(255, 0, 0, 0.7); transform: rotateY(0deg) translateZ(100px); }
+        .cube__face--right  { background: rgba(0, 255, 0, 0.7); transform: rotateY(90deg) translateZ(100px); }
+        .cube__face--back   { background: rgba(0, 0, 255, 0.7); transform: rotateY(180deg) translateZ(100px); }
+        .cube__face--left   { background: rgba(255, 255, 0, 0.7); transform: rotateY(-90deg) translateZ(100px); }
+        .cube__face--top    { background: rgba(255, 0, 255, 0.7); transform: rotateX(90deg) translateZ(100px); }
+        .cube__face--bottom { background: rgba(0, 255, 255, 0.7); transform: rotateX(-90deg) translateZ(100px); }
+
+        /* Botón para activar permisos en móviles modernos (iOS) */
+        #permiso-btn {
+            position: absolute;
+            bottom: 30px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            display: none;
+        }
+    </style>
+</head>
 <body>
 
-<head>
+    <div id="info">
+        Mueve el mouse por la pantalla (sin hacer clic) o inclina tu celular para mover el cubo 3D.
+    </div>
 
- <img id="animacionCerrar1" class="menu" onclick="audio()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Audio.png?raw=true" width="150" height="150">
- <img id="animacionCerrar2" class="menu" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Texto.png?raw=true" width="150" height="150">
- <img id="animacionCerrar3" class="menu" onclick="video(), videoAnimacion()"  src="https://github.com/JoseAngelVegas/ampamix/blob/main/Videos.png?raw=true" width="150" height="150">
+    <div class="scene">
+        <div class="cube" id="cube">
+            <div class="cube__face cube__face--front">1</div>
+            <div class="cube__face cube__face--back">2</div>
+            <div class="cube__face cube__face--right">3</div>
+            <div class="cube__face cube__face--left">4</div>
+            <div class="cube__face cube__face--top">5</div>
+            <div class="cube__face cube__face--bottom">6</div>
+        </div>
+    </div>
 
- <div></div>
+    <button id="permiso-btn">Activar Sensor de Movimiento</button>
 
-  <img id="animacion1" class="video" onclick="Josechicha()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Josechicha.png?raw=true" width="0" height="0">
-  <img id="animacion2" class="video" onclick="Nosotros()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/La%20Superioridad%20De%20NOSOTROS.png?raw=true" width="0" height="0">
+    <script>
+        const cube = document.getElementById('cube');
+        const permisoBtn = document.getElementById('permiso-btn');
 
- <script>
+        let rotX = 0;
+        let rotY = 0;
 
-  function audio() {
+        // --- 1. CONTROL PARA PC (Movimiento de mouse sin clic) ---
+        window.addEventListener('mousemove', (e) => {
+            // Obtenemos el centro de la pantalla
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
 
-      const cerrarInicio = document.querySelectorAll(".menu");
-      for (let i = 0; i < cerrarInicio.length; i++) {
-         cerrarInicio[i].style.width = "0px";
-         cerrarInicio[i].style.height = "0px";
-         cerrarInicio[i].style.visibility = "hidden";
-         
-      }
-  }
+            // Calculamos la distancia del mouse respecto al centro y la convertimos en grados
+            rotY = ((e.clientX - centerX) / centerX) * 180; // Rota en el eje Y según X
+            rotX = -((e.clientY - centerY) / centerY) * 180; // Rota en el eje X según Y
 
-  function texto() {
+            actualizarRotacion();
+        });
 
-      const cerrarInicio = document.querySelectorAll(".menu");
-      for (let i = 0; i < cerrarInicio.length; i++) {
-         cerrarInicio[i].style.width = "0px";
-         cerrarInicio[i].style.height = "0px";
-         cerrarInicio[i].style.visibility = "hidden";
-         
-      }
-  }
-
-  function video() {
-
-      const cerrarInicio = document.querySelectorAll(".menu");
-      for (let i = 0; i < cerrarInicio.length; i++) {
-         cerrarInicio[i].style.filter = "blur(5px)";
-         cerrarInicio[i].style.width = "80px";
-         cerrarInicio[i].style.height = "80px";
-         
-         
-      }
-
-    const abrir = document.querySelectorAll(".video");
-      for (let i = 0; i < abrir.length; i++) {
-         abrir[i].style.width = "120px";
-         abrir[i].style.height = "120px";
-         
-      }
-      
-      
-  }
-
-  </script>
-  
-  <script>
-  
-   function videoAnimacion() {
-  var el = document.getElementById('animacion1');
-  el.style.animation = 'none';
-  el.offsetHeight;
-  el.style.animation = null;
-  
-  document.getElementById('animacion1').style.animationPlayState = "running"
-    document.getElementById('animacion2').style.animationPlayState = "running"
-    
- document.getElementById('animacionCerrar1').style.animationPlayState = "running"
-    document.getElementById('animacionCerrar2').style.animationPlayState = "running"
-    
- document.getElementById('animacionCerrar3').style.animationPlayState = "running"
-
-  
-}
-  
-  </script>
-
-
-   <style>
-
-    .menu {
-     box-shadow: 0px 0px 5px black;
-    border-radius: 20px;
-    margin: 0 auto;
-    display: flex;
-    transform: translateY(50%);
-     
-    }
-
-    div {
-     background-color: black;
-     width: %;
-     height: %;
-     opacity: 50%;
-     position: fixed;
-     top: 7px;
-    }
-
-    .video {
-    position: relative;
-    box-shadow: 0px 5px 20px black;
-    border-radius: 100px;
-    margin: 0 auto;
-    display: flex;
-    transform: translateY(-100%);
-    }
-    
-    #animacion1 {
-  position: relative;
-  animation: bounce 0.3s;
-  animation-fill-mode: both;
-  animation-play-state: paused;
-
-}
-
-#animacion2 {
-  position: relative;
-  animation: bounce 0.5s;
-  animation-fill-mode: both;
-  animation-play-state: paused;
-
-}
-
-#animacionCerrar1 {
-  position: relative;
-  animation: cerrar 0.2s;
-  animation-fill-mode: both;
-  animation-play-state: paused;
-
-}
-
-#animacionCerrar2 {
-  position: relative;
-  animation: cerrar 0.3s;
-  animation-fill-mode: both;
-  animation-play-state: paused;
-
-}
-
-#animacionCerrar3 {
-  position: relative;
-  animation: cerrar 0.4s;
-  animation-fill-mode: both;
-  animation-play-state: paused;
-
-}
-
-@keyframes cerrar {
-  0% { width: 150px; height: 150px; }
-  100% { width: 80px; height: 80px; }
-}
-
-@keyframes bounce {
-  0% { top: -10px; width: 0px; height: 0px; }
-  100% { top: -100px; width: 120px; height: 120px; }
-}
-
-      body {
-background: #58df8c;
-background: -webkit-linear-gradient(95deg, rgba(88, 223, 140, 1) 0%, rgba(91, 203, 207, 1) 44%, rgba(99, 201, 162, 1) 80%, rgba(83, 237, 219, 1) 100%);
-background: -moz-linear-gradient(95deg, rgba(88, 223, 140, 1) 0%, rgba(91, 203, 207, 1) 44%, rgba(99, 201, 162, 1) 80%, rgba(83, 237, 219, 1) 100%);
-background: linear-gradient(95deg, rgba(88, 223, 140, 1) 0%, rgba(91, 203, 207, 1) 44%, rgba(99, 201, 162, 1) 80%, rgba(83, 237, 219, 1) 100%);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#58DF8C", endColorstr="#53EDDB", GradientType=0);
-      }
-
-   @media only screen and (max-width:500px) {
-            .button, .submit, .mas, .input {
-               width: 40%;
+        // --- 2. CONTROL PARA CELULAR (Giroscopio) ---
+        function handleOrientation(e) {
+            // beta: inclinación adelante/atrás (-180 a 180)
+            // gamma: inclinación izquierda/derecha (-90 to 90)
+            if (e.beta !== null && e.gamma !== null) {
+                rotX = e.beta * 1.5;   
+                rotY = e.gamma * 1.5;  
+                actualizarRotacion();
             }
-         }
+        }
 
-</style>
+        // Comprobar si se requieren permisos (necesario en iOS 13+)
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+            permisoBtn.style.display = 'block';
+            permisoBtn.addEventListener('click', () => {
+                DeviceOrientationEvent.requestPermission()
+                    .then(response => {
+                        if (response === 'granted') {
+                            window.addEventListener('deviceorientation', handleOrientation);
+                            permisoBtn.style.display = 'none';
+                        }
+                    })
+                    .catch(console.error);
+            });
+        } else if (window.DeviceOrientationEvent) {
+            // Para Android y dispositivos que no requieren permiso explícito
+            window.addEventListener('deviceorientation', handleOrientation);
+        }
 
+        // --- 3. APLICAR ROTACIÓN AL CUBO ---
+        function actualizarRotacion() {
+            cube.style.transform = `translateZ(-100px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+        }
+    </script>
 </body>
-
-</head>
-
 </html>
