@@ -131,8 +131,8 @@
             // beta: inclinación adelante/atrás (-180 a 180)
             // gamma: inclinación izquierda/derecha (-90 to 90)
             if (e.beta !== null && e.gamma !== null) {
-                rotX = e.beta * 1.5;   
-                rotY = e.gamma * 1.5;  
+                rotX = e.beta * 0.5;   
+                rotY = e.gamma * 0.5;  
                 actualizarRotacion();
             }
         }
