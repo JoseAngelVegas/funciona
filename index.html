@@ -120,8 +120,8 @@
             const centerY = window.innerHeight / 2;
 
             // Calculamos la distancia del mouse respecto al centro y la convertimos en grados
-            rotY = ((e.clientX - centerX) / centerX) * 180; // Rota en el eje Y según X
-            rotX = -((e.clientY - centerY) / centerY) * 180; // Rota en el eje X según Y
+            rotY = ((e.clientX - centerX) / centerX) * 10; // Rota en el eje Y según X
+            rotX = -((e.clientY - centerY) / centerY) * 10; // Rota en el eje X según Y
 
             actualizarRotacion();
         });
