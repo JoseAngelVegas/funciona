@@ -3,162 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cubo 3D interactivo (Mouse / Giroscopio)</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #1a1a1a;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            perspective: 1000px;
-        }
-
-        #info {
-            position: absolute;
-            top: 20px;
-            text-align: center;
-            font-size: 14px;
-            color: #888;
-            padding: 0 15px;
-        }
-
-        /* Contenedor 3D */
-        .scene {
-            width: 200px;
-            height: 200px;
-            position: relative;
-            transform-style: preserve-3d;
-        }
-
-        /* El Cubo */
-        .cube {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            transform-style: preserve-3d;
-            transform: translateZ(-100px);
-            transition: transform 0.1s ease-out; /* Suavizado de movimiento */
-        }
-
-        /* Caras del Cubo */
-        .cube__face {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            border: 2px solid #fff;
-            font-size: 40px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.85;
-        }
-
-        .cube__face--front  { background: rgba(255, 0, 0, 0.7); transform: rotateY(0deg) translateZ(100px); }
-        .cube__face--right  { background: rgba(0, 255, 0, 0.7); transform: rotateY(90deg) translateZ(100px); }
-        .cube__face--back   { background: rgba(0, 0, 255, 0.7); transform: rotateY(180deg) translateZ(100px); }
-        .cube__face--left   { background: rgba(255, 255, 0, 0.7); transform: rotateY(-90deg) translateZ(100px); }
-        .cube__face--top    { background: rgba(255, 0, 255, 0.7); transform: rotateX(90deg) translateZ(100px); }
-        .cube__face--bottom { background: rgba(0, 255, 255, 0.7); transform: rotateX(-90deg) translateZ(100px); }
-
-        /* Botón para activar permisos en móviles modernos (iOS) */
-        #permiso-btn {
-            position: absolute;
-            bottom: 30px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            display: none;
-        }
-    </style>
+    <title>Cambiar URL con botón</title>
 </head>
 <body>
 
-    <div id="info">
-        Mueve el mouse por la pantalla (sin hacer clic) o inclina tu celular para mover el cubo 3D.
-    </div>
+    <h1>Prueba de cambio de URL</h1>
+    <p>Haz clic en el botón para cambiar el final del enlace.</p>
 
-    <div class="scene">
-        <div class="cube" id="cube">
-            <div class="cube__face cube__face--front">1</div>
-            <div class="cube__face cube__face--back">2</div>
-            <div class="cube__face cube__face--right">3</div>
-            <div class="cube__face cube__face--left">4</div>
-            <div class="cube__face cube__face--top">5</div>
-            <div class="cube__face cube__face--bottom">6</div>
-        </div>
-    </div>
-
-    <button id="permiso-btn">Activar Sensor de Movimiento</button>
+    <!-- Botón que activa la función -->
+    <button onclick="cambiarURL()">Ir a /adios</button>
 
     <script>
-        const cube = document.getElementById('cube');
-        const permisoBtn = document.getElementById('permiso-btn');
-
-        let rotX = 0;
-        let rotY = 0;
-
-        // --- 1. CONTROL PARA PC (Movimiento de mouse sin clic) ---
-        window.addEventListener('mousemove', (e) => {
-            // Obtenemos el centro de la pantalla
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-
-            // Calculamos la distancia del mouse respecto al centro y la convertimos en grados
-            rotY = ((e.clientX - centerX) / centerX) * 10; // Rota en el eje Y según X
-            rotX = -((e.clientY - centerY) / centerY) * 10; // Rota en el eje X según Y
-
-            actualizarRotacion();
-        });
-
-        // --- 2. CONTROL PARA CELULAR (Giroscopio) ---
-        function handleOrientation(e) {
-            // beta: inclinación adelante/atrás (-180 a 180)
-            // gamma: inclinación izquierda/derecha (-90 to 90)
-            if (e.beta !== null && e.gamma !== null) {
-                rotX = e.beta * 5;   
-                rotY = e.gamma * 5;  
-                actualizarRotacion();
-            }
-        }
-
-        // Comprobar si se requieren permisos (necesario en iOS 13+)
-        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-            permisoBtn.style.display = 'block';
-            permisoBtn.addEventListener('click', () => {
-                DeviceOrientationEvent.requestPermission()
-                    .then(response => {
-                        if (response === 'granted') {
-                            window.addEventListener('deviceorientation', handleOrientation);
-                            permisoBtn.style.display = 'none';
-                        }
-                    })
-                    .catch(console.error);
-            });
-        } else if (window.DeviceOrientationEvent) {
-            // Para Android y dispositivos que no requieren permiso explícito
-            window.addEventListener('deviceorientation', handleOrientation);
-        }
-
-        // --- 3. APLICAR ROTACIÓN AL CUBO ---
-        function actualizarRotacion() {
-            cube.style.transform = `translateZ(-100px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+        function cambiarURL() {
+            // Define el nuevo estado o ruta que quieres mostrar al final
+            const nuevaRuta = "/adios";
+            
+            // pushState cambia la URL en la barra de direcciones sin recargar la página
+            // El primer parámetro es un objeto de estado, el segundo el título y el tercero la nueva URL
+            window.history.pushState({path: nuevaRuta}, "", nuevaRuta);
         }
     </script>
+
 </body>
 </html>
