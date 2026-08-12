@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambiar URL con botón</title>
+</head>
+<body>
+
+    <h1>Prueba de cambio de URL</h1>
+    <p>Haz clic en el botón para cambiar el final del enlace.</p>
+
+    <!-- Botón que activa la función -->
+    <button onclick="cambiarURL()">Ir a /adios</button>
+
+    <script>
+        function cambiarURL() {
+            // Define el nuevo estado o ruta que quieres mostrar al final
+            const nuevaRuta = "/adios";
+            
+            // pushState cambia la URL en la barra de direcciones sin recargar la página
+            // El primer parámetro es un objeto de estado, el segundo el título y el tercero la nueva URL
+            window.history.pushState({path: nuevaRuta}, "", nuevaRuta);
+        }
+    </script>
+
+</body>
+</html>
