@@ -1,28 +1,270 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cambiar URL con botón</title>
-</head>
+<html>
+
 <body>
 
-    <h1>Prueba de cambio de URL</h1>
-    <p>Haz clic en el botón para cambiar el final del enlace.</p>
+<head>
 
-    <!-- Botón que activa la función -->
-    <button onclick="cambiarURL()">Ir a /adios</button>
+ 
+ <img class="Bandeja" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Ampamix%20interfaz%20Concepto%20(2).png?raw=true" width="100%" height="189">
+ 
+ <img class="menuInterfaz" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Ampamix%20Sprites%20(13).png?raw=true" width="200" height="200">
+ 
+ <img class="Reflejo" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Ampamix%20Sprites%20(13)%201.png?raw=true" width="200" height="57">
+ 
 
-    <script>
-        function cambiarURL() {
-            // Define el nuevo estado o ruta que quieres mostrar al final
-            const nuevaRuta = "/adios";
-            
-            // pushState cambia la URL en la barra de direcciones sin recargar la página
-            // El primer parámetro es un objeto de estado, el segundo el título y el tercero la nueva URL
-            window.history.pushState({path: nuevaRuta}, "", nuevaRuta);
+  <img class="Trofeo" onclick="audio()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Trofeo.png?raw=true" width="50" height="50">
+
+   <img class="Icono" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Texto.png?raw=true" width="50" height="50">
+   
+   
+   
+
+ <img class="Destacado" onclick="biologiaLlamadaJosechicha()"  src="https://github.com/JoseAngelVegas/ampamix/blob/main/Biolog%C3%ADa%20Llamada%20Josechicha.png?raw=true" width="350" height="200">
+ 
+ 
+ 
+<div class="Espacio">
+ 
+<img id="Contenido" class="Contenido" onclick="tranquiNetwoork()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Tranqui%20Netwoork.png?raw=true">
+
+<img class="IconoContenido" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Texto.png?raw=true" width="50" height="50">
+
+
+<img class="Contenido" onclick="laSuperioridadDeNOSOTROS()" src="https://github.com/JoseAngelVegas/ampamix/blob/main/La%20Superioridad%20De%20NOSOTROS%20(Corto).png?raw=true">
+
+<img  class="IconoContenido" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Video.png?raw=true" width="50" height="50">
+
+
+<img class="Contenido" onclick="josechicha()"  src="https://github.com/JoseAngelVegas/ampamix/blob/main/Josechicha.png?raw=true">
+
+<img class="IconoContenido" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Video.png?raw=true" width="50" height="50">
+
+</div>
+
+<div class="EspacioIcono">
+
+
+
+</div>
+
+ 
+ <script>
+ 
+  function biologiaLlamadaJosechicha() {
+        
+     const abrir = document.querySelectorAll(".menuInterfaz, .Contenido, .Destacado, .IconoContenido, .Icono, .Reflejo, .Bandeja, .Trofeo");
+      for (let i = 0; i < abrir.length; i++) {
+         abrir[i].style.height = "0px";
+         abrir[i].style.width = "0px";
+         abrir[i].style.visibility = "hidden";
+         
+      }
+      
+      }
+      
+       function tranquiNetwoork() {
+        
+     const abrir = document.querySelectorAll(".menuInterfaz, .Contenido, .Destacado, .IconoContenido, .Icono, .Reflejo, .Bandeja, .Trofeo");
+      for (let i = 0; i < abrir.length; i++) {
+         abrir[i].style.height = "0px";
+         abrir[i].style.width = "0px";
+         abrir[i].style.visibility = "hidden";
+         
+      }     
+      
+      }
+      
+       function laSuperioridadDeNOSOTROS() {
+        
+     const abrir = document.querySelectorAll(".menuInterfaz, .Contenido, .Destacado, .IconoContenido, .Icono, .Reflejo, .Bandeja, .Trofeo");
+      for (let i = 0; i < abrir.length; i++) {
+         abrir[i].style.height = "0px";
+         abrir[i].style.width = "0px";
+         abrir[i].style.visibility = "hidden";
+         
+      }     
+      
+      }
+      
+      
+         function josechicha() {
+        
+     const abrir = document.querySelectorAll(".menuInterfaz, .Contenido, .Destacado, .IconoContenido, .Icono, .Reflejo, .Bandeja, .Trofeo");
+      for (let i = 0; i < abrir.length; i++) {
+         abrir[i].style.height = "0px";
+         abrir[i].style.width = "0px";
+         abrir[i].style.visibility = "hidden";
+         
+      }     
+      
+      }
+      
+      
+   
+  
+  </script>
+  
+ 
+   
+   <style>
+
+   
+
+ 
+
+     .Bandeja {
+     box-shadow: 0px 0px 5px white;
+     opacity: 85%;
+     transform: translateY(100%);
+     }
+    
+    .menuInterfaz {
+     position: relative;
+     box-shadow: 0px 0px 5px black;
+     border-radius: 15px;
+     transform: translateY(-35%);
+     margin: 0 auto;
+     display: flex;
+     flex-direction: column;
+     }
+     
+     .Reflejo {
+     position: relative;
+     box-shadow: 0px 0px 5px black;
+     border-radius: 15px;
+     transform: translateY(120%);
+     margin: 0 auto;
+     display: flex;
+     flex-direction: column;
+     rotate: 180deg;
+     border-radius: 0px 0px 15px 15px;
+     opacity: 70%;
+     filter: blur(5px);
+
+     }
+     
+     .Destacado {
+     box-shadow: 0px 0px 5px yellow;
+     border-radius: 15px;
+     margin: 0 auto;
+     display: flex;
+     }
+     
+     .Trofeo {
+     margin: 0 auto;
+     display: flex;
+     transform: translateY(-50%);
+     }
+     
+     
+     .Icono {
+     box-shadow: 0px 0px 5px black;
+     border-radius: 5px;
+     display: flex;
+     justify-self: end;
+     transform: translateY(100%);
+     position: relative;
+
+     }
+     
+     .Contenido {
+          position: relative;
+     width: 233px;
+     height: 133px;
+     box-shadow: 0px 0px 5px black;
+     border-radius: 15px;
+     margin: 0 auto;
+          transform: translateY(50%);
+       
+          }
+          
+   .Espacio {
+  display: grid;
+  gap: 0px;
+}
+
+.IconoContenido {
+  box-shadow: 0px 0px 5px black;
+     border-radius: 5px;
+     justify-self: end;
+     transform: translateY(-180%);
+     position: relative;
+}
+
+    
+    
+     #Elemento {
+     animation: Abrir algo 0.8s;
+     animation-fill-mode: both;
+     animation-play-state: paused;
+     }
+     
+    .cerrar {
+     width: 0%;
+     height: 0%;
+     opacity: 100%;
+     position: fixed;
+     animation: animacionCerrar 0.8s;
+     animation-fill-mode: both;
+     animation-play-state: paused;
+    }
+     
+    
+     .menu {
+    position: relative;
+    gap: 50px;
+    display: flex;
+    margin: 0 auto;
+    box-shadow: 0px 0px 5px black;
+     border-radius: 20px;
+     transform: translateY(50%);
+
+    }
+    
+  
+      body {
+       background-image: url("https://github.com/JoseAngelVegas/ampamix/blob/main/Fondo%20de%20Pantalla%20(PC).png?raw=true");
+       background-color: #49c2ac;
+       background-size: cover;
+       background-repeat: no-repeat;
+       background-position: center;
+       margin: 0;
+       padding: 0;
+      }
+
+       @media only screen and (max-width:500px) {
+       .button, .submit, .mas, .input {
+        width: 40%;
         }
-    </script>
+            
+        .Destacado {
+        width: 250px;
+        height: 150px;
+        }
+            
+        .Contenido {
+        width: 220px;
+        height: 140px;
+        }
+
+       body {
+       background-image: url("https://github.com/JoseAngelVegas/ampamix/blob/main/Fondo%20de%20Pantalla%20(Celular).png?raw=true");
+       background-color: #49c2ac;
+       background-size: cover;
+       background-repeat: no-repeat;
+       background-position: center;
+       margin: 0;
+       padding: 0;
+     
+         }
+   }
+        
+
+</style>
 
 </body>
+
+</head>
+
+    
 </html>
