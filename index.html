@@ -1,29 +1,188 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Conectores</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
+        .canvas-container {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            background: #ffffff;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        /* Elementos conectables */
+        .node {
+            position: absolute;
+            width: 120px;
+            height: 60px;
+            background: #4a90e2;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: background 0.2s;
+        }
+
+        .node:hover {
+            background: #357abd;
+        }
+
+        .node.active {
+            background: #e67e22; /* Se colorea al seleccionarlo */
+        }
+
+        #node1 { top: 100px; left: 100px; }
+        #node2 { top: 300px; left: 550px; }
+        #node3 { top: 400px; left: 0px; }
+        #node4 { top: 300px; left: 20px; }
+
+
+        /* SVG para dibujar las líneas */
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Permite hacer click a través del SVG */
+        }
+
+        line {
+            stroke: #2c3e50;
+            stroke-width: 3;
+            stroke-linecap: round;
+        }
+    </style>
+</head>
 <body>
 
-<head>
+    <div class="canvas-container" id="canvas">
+        <!-- SVG para renderizar los cables -->
+        <svg id="svg-canvas">
+            <line id="connection-line" x1="0" y1="0" x2="0" y2="0" style="display: none;"></line>
+        </svg>
 
- 
-  <img class="DescargarArchivo" src="https://github.com/JoseAngelVegas/ampamix/blob/main/Descargar%20archivo.png?raw=true" width="150" height="150">
+        <!-- Elementos -->
+        <div class="node" id="node1">Elemento 1</div>
+        <div class="node" id="node2">Elemento 2</div>
+        <div class="node" id="node3">Elemento 3</div>
+                <div class="node" id="node4">Elemento 4</div>
 
-   
-   <style>
-    
-    .DescargarArchivo {
-     box-shadow: 0px 0px 5px black;
-     border-radius: 15px;
-     margin: 0 auto;
-     display: flex;
-     }
-     
-     
-     
-     
+    </div>
 
-</style>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const nodes = document.querySelectorAll('.node');
+        const line = document.getElementById('connection-line');
 
+        let isConnecting = false;
+        let startNode = null;
+
+        // Calcular el centro de un elemento relativo al contenedor canvas
+        function getNodeCenter(node) {
+            const rect = node.getBoundingClientRect();
+            const canvasRect = canvas.getBoundingClientRect();
+            return {
+                x: rect.left + rect.width / 2 - canvasRect.left,
+                y: rect.top + rect.height / 2 - canvasRect.top
+            };
+        }
+
+        // Manejar click en los nodos
+        nodes.forEach(node => {
+            node.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (!isConnecting) {
+                    // Primer click: Iniciar conexión
+                    isConnecting = true;
+                    startNode = node;
+                    node.classList.add('active');
+
+                    const center = getNodeCenter(node);
+                    line.setAttribute('x1', center.x);
+                    line.setAttribute('y1', center.y);
+                    line.setAttribute('x2', center.x);
+                    line.setAttribute('y2', center.y);
+                    styleLine(line, true);
+                } else {
+                    // Segundo click: Finalizar conexión (si es un nodo distinto)
+                    if (startNode !== node) {
+                        const startCenter = getNodeCenter(startNode);
+                        const endCenter = getNodeCenter(node);
+
+                        // Crear una línea permanente
+                        createPermanentLine(startCenter.x, startCenter.y, endCenter.x, endCenter.y);
+                    }
+
+                    resetConnection();
+                }
+            });
+        });
+
+        // Seguir el movimiento del mouse al arrastrar la línea
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isConnecting) return;
+
+            const canvasRect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - canvasRect.left;
+            const mouseY = e.clientY - canvasRect.top;
+
+            line.setAttribute('x2', mouseX);
+            line.setAttribute('y2', mouseY);
+        });
+
+        // Cancelar si se hace click fuera del canvas o nodos
+        window.addEventListener('click', () => {
+            if (isConnecting) {
+                resetConnection();
+            }
+        });
+
+        function styleLine(targetLine, show) {
+            targetLine.style.display = show ? 'block' : 'none';
+        }
+
+        function resetConnection() {
+            if (startNode) startNode.classList.remove('active');
+            isConnecting = false;
+            startNode = null;
+            styleLine(line, false);
+        }
+
+        function createPermanentLine(x1, y1, x2, y2) {
+            const svgNS = "http://www.w3.org/2000/svg";
+            const permanentLine = document.createElementNS(svgNS, 'line');
+            permanentLine.setAttribute('x1', x1);
+            permanentLine.setAttribute('y1', y1);
+            permanentLine.setAttribute('x2', x2);
+            permanentLine.setAttribute('y2', y2);
+            permanentLine.setAttribute('stroke', '#27ae60'); // Color verde para indicar éxito
+            permanentLine.setAttribute('stroke-width', '3');
+            
+            document.getElementById('svg-canvas').appendChild(permanentLine);
+        }
+    </script>
 </body>
-
-
 </html>
