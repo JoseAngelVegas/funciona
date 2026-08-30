@@ -2,215 +2,79 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Conectores</title>
-    
-    
+    <title>Conectores</title>
     <style>
-        /* Estilos generales de la página (centra todo en la pantalla) */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Contenedor principal o "lienzo" donde se ubican los elementos */
-        .canvas-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-
-        }
-        
-        /* Estilos base para los elementos conectables (nodos) */
-        .node {
-            position: absolute;
-            max-width: 5%;
-            animation: Prueba 5s;
-            max-height: 40%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            user-select: none; /* Evita que se seleccione el texto al hacer click rápido */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            z-index: 10;
-        }
-
-        /* Efecto al pasar el cursor por encima de un nodo */
-        .node:hover {
-            background: #357abd;
-        }
-
-        /* Color especial para el nodo que ha iniciado una conexión */
-        .node.active {
-            background: #e67e22; 
-        }
-
-        /* Posiciones iniciales independientes para cada elemento */
-        #node1 { top: 200px; left: 250px; }
-        #node2 { top: 300px; left: 550px; }
-        #node3 { top: 100px; left: 200px; }
-        #node4 { top: 300px; left: 300px; }
-
-        /* Capa SVG que cubre todo el lienzo para dibujar las líneas */
-        svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* Crucial: permite hacer click en los nodos a través del SVG */
-        }
-
-        /* Estilo visual de las líneas/cables */
-        line {
-            stroke: #2c3e50;
-            stroke-width: 3;
-            stroke-linecap: round;
-        }
-        
-        @keyframes Prueba {
-  0% {opacity: 0; }
-  100% {opacity: 1; }
-}
-
+        body { height: 100vh; display: flex; justify-content: center; align-items: center; margin: 0; background: #f4f4f9; overflow: hidden; }
+        .node { position: absolute; width: 40px; height: 40px; cursor: pointer; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .node.active { background: #e67e22 !important; }
+        #node1 { top: 200px; left: 250px; background: #3498db; }
+        #node2 { top: 300px; left: 550px; background: #3498db; }
+        #node3 { top: 100px; left: 200px; background: #3498db; }
+        #node4 { top: 300px; left: 300px; background: #3498db; }
+        svg { position: absolute; width: 100%; height: 100%; pointer-events: none; }
+        line { stroke: #2c3e50; stroke-width: 3; }
+        #msg { display: none; position: absolute; top: 10px; background: #27ae60; color: white; padding: 10px 20px; font-weight: bold; border-radius: 5px; }
     </style>
 </head>
-
 <body>
 
-<img class="node" id="node1" src="https://github.com/JoseAngelVegas/borrador/blob/main/Boton.png?raw=true">
-    <img class="node" id="node2" src="https://github.com/JoseAngelVegas/borrador/blob/main/Boton.png?raw=true">
-    <img class="node" id="node3" src="https://github.com/JoseAngelVegas/borrador/blob/main/Boton.png?raw=true">
-    <img class="node" id="node4" src="https://github.com/JoseAngelVegas/borrador/blob/main/Boton.png?raw=true">
+    <div class="node" id="node1"></div>
+    <div class="node" id="node2"></div>
+    <div class="node" id="node3"></div>
+    <div class="node" id="node4"></div>
 
-    
+    <svg><line id="temp" style="display:none"/></svg>
+    <div id="msg">¡Completado! 🎉</div>
 
-    <!-- Lienzo de trabajo -->
-    <div class="canvas-container" id="canvas">
-        
-        <!-- SVG contenedor de la línea temporal y líneas permanentes -->
-        <svg id="svg-canvas">
-            <!-- Línea temporal que sigue el movimiento del mouse -->
-            <line id="connection-line" x1="0" y1="0" x2="0" y2="0" style="display: none;"></line>
-        </svg>
-
-       
     <script>
-        // Referencias a los elementos principales del DOM
-        const canvas = document.getElementById('canvas');
-        const nodes = document.querySelectorAll('.node');
-        const line = document.getElementById('connection-line');
+        let start = null, pairs = new Set();
+        const temp = document.getElementById('temp');
 
-        // Variables de estado del sistema de conexión
-        let isConnecting = false; // Indica si estamos en medio de una conexión activa
-        let startNode = null;     // Almacena el nodo desde donde se originó el cable
+        const getCenter = n => {
+            const r = n.getBoundingClientRect();
+            return { x: r.left + r.width/2, y: r.top + r.height/2 };
+        };
 
-        // Función para calcular exactamente el centro de cualquier nodo dentro del canvas
-        function getNodeCenter(node) {
-            const rect = node.getBoundingClientRect();
-            const canvasRect = canvas.getBoundingClientRect();
-            return {
-                x: rect.left + rect.width / 2 - canvasRect.left,
-                y: rect.top + rect.height / 2 - canvasRect.top
-            };
-        }
-
-        // Asignar el evento de clic a cada uno de los nodos
-        nodes.forEach(node => {
+        document.querySelectorAll('.node').forEach(node => {
             node.addEventListener('click', (e) => {
-                e.stopPropagation(); // Evita que el clic propague y active eventos globales no deseados
+                e.stopPropagation();
+                const c = getCenter(node);
 
-                if (!isConnecting) {
-                    // --- PRIMER CLIC: INICIAR CONEXIÓN ---
-                    isConnecting = true;
-                    startNode = node;
-                    node.classList.add('active'); // Cambia de color para mostrar selección
+                if (!start) {
+                    start = node;
+                    node.classList.add('active');
+                    temp.setAttribute('x1', c.x); temp.setAttribute('y1', c.y);
+                    temp.setAttribute('x2', c.x); temp.setAttribute('y2', c.y);
+                    temp.style.display = 'block';
+                } else if (start !== node) {
+                    const sc = getCenter(start);
+                    const key = [start.id, node.id].sort().join('-');
 
-                    // Obtiene el centro del nodo origen y posiciona el inicio de la línea allí
-                    const center = getNodeCenter(node);
-                    line.setAttribute('x1', center.x);
-                    line.setAttribute('y1', center.y);
-                    line.setAttribute('x2', center.x);
-                    line.setAttribute('y2', center.y);
-                    styleLine(line, true); // Muestra la línea temporal en pantalla
-                } else {
-                    // --- SEGUNDO CLIC: FINALIZAR CONEXIÓN ---
-                    // Valida que no hagamos clic en el mismo nodo de origen
-                    if (startNode !== node) {
-                        const startCenter = getNodeCenter(startNode);
-                        const endCenter = getNodeCenter(node);
+                    if (!pairs.has(key)) {
+                        pairs.add(key);
+                        const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        l.setAttribute('x1', sc.x); l.setAttribute('y1', sc.y);
+                        l.setAttribute('x2', c.x); l.setAttribute('y2', c.y);
+                        l.setAttribute('stroke', '#27ae60');
+                        document.querySelector('svg').appendChild(l);
 
-                        // Dibuja una línea fija/permanente conectando ambos centros
-                        createPermanentLine(startCenter.x, startCenter.y, endCenter.x, endCenter.y);
+                        if (pairs.size === 6) document.getElementById('msg').style.display = 'block';
                     }
-
-                    // Limpia y reinicia el estado de conexión
-                    resetConnection();
+                    reset();
                 }
             });
         });
 
-        // Evento que actualiza la posición del extremo del cable mientras se arrastra con el mouse
-        canvas.addEventListener('mousemove', (e) => {
-            if (!isConnecting) return; // Si no estamos conectando nada, no hace nada
-
-            const canvasRect = canvas.getBoundingClientRect();
-            // Calcula la posición del cursor relativa al lienzo
-            const mouseX = e.clientX - canvasRect.left;
-            const mouseY = e.clientY - canvasRect.top;
-
-            // Actualiza el punto final (x2, y2) de la línea temporal
-            line.setAttribute('x2', mouseX);
-            line.setAttribute('y2', mouseY);
+        window.addEventListener('mousemove', e => {
+            if (start) { temp.setAttribute('x2', e.clientX); temp.setAttribute('y2', e.clientY); }
         });
 
-        // Evento global para cancelar la conexión si el usuario hace clic fuera de los elementos
-        window.addEventListener('click', () => {
-            if (isConnecting) {
-                resetConnection();
-            }
-        });
+        window.addEventListener('click', reset);
 
-        // Función auxiliar para mostrar u ocultar la línea temporal
-        function styleLine(targetLine, show) {
-            targetLine.style.display = show ? 'block' : 'none';
-        }
-
-        // Función para restablecer todas las variables y estilos al cancelar o terminar una conexión
-        function resetConnection() {
-            if (startNode) startNode.classList.remove('active'); // Quita el color activo
-            isConnecting = false;
-            startNode = null;
-            styleLine(line, false); // Oculta la línea temporal
-        }
-
-        // Función encargada de inyectar dinámicamente una nueva línea SVG permanente en el DOM
-        function createPermanentLine(x1, y1, x2, y2) {
-            const svgNS = "http://www.w3.org/2000/svg";
-            const permanentLine = document.createElementNS(svgNS, 'line');
-            
-            // Asigna coordenadas de inicio y fin
-            permanentLine.setAttribute('x1', x1);
-            permanentLine.setAttribute('y1', y1);
-            permanentLine.setAttribute('x2', x2);
-            permanentLine.setAttribute('y2', y2);
-            
-            // Estilos de la conexión exitosa (color verde)
-            permanentLine.setAttribute('stroke', '#27ae60'); 
-            permanentLine.setAttribute('stroke-width', '3');
-            
-            // Añade la línea oficialmente al contenedor SVG del documento
-            document.getElementById('svg-canvas').appendChild(permanentLine);
+        function reset() {
+            if (start) start.classList.remove('active');
+            start = null;
+            temp.style.display = 'none';
         }
     </script>
 </body>
