@@ -27,23 +27,18 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-
+        
         /* Estilos base para los elementos conectables (nodos) */
         .node {
             position: absolute;
             width: 120px;
             height: 60px;
-            background: #4a90e2;
-            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 6px;
             cursor: pointer;
             user-select: none; /* Evita que se seleccione el texto al hacer click rápido */
-            font-weight: bold;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: background 0.2s;
         }
 
         /* Efecto al pasar el cursor por encima de un nodo */
@@ -82,6 +77,11 @@
 </head>
 <body>
 
+    <img class="node" id="node1" src="https://github.com/JoseAngelVegas/borrador/blob/main/Boton.png?raw=true">
+    <img class="node" id="node2" src="https://github.com/JoseAngelVegas/borrador/blob/main/Boton.png?raw=true">
+    <img class="node" id="node3" src="https://github.com/JoseAngelVegas/borrador/blob/main/Boton.png?raw=true">
+    <img class="node" id="node4" src="https://github.com/JoseAngelVegas/borrador/blob/main/Boton.png?raw=true">
+
     <!-- Lienzo de trabajo -->
     <div class="canvas-container" id="canvas">
         
@@ -91,13 +91,7 @@
             <line id="connection-line" x1="0" y1="0" x2="0" y2="0" style="display: none;"></line>
         </svg>
 
-        <!-- Elementos interactivos (Nodos) -->
-        <div class="node" id="node1">Elemento 1</div>
-        <div class="node" id="node2">Elemento 2</div>
-        <div class="node" id="node3">Elemento 3</div>
-        <div class="node" id="node4">Elemento 4</div>
-    </div>
-
+       
     <script>
         // Referencias a los elementos principales del DOM
         const canvas = document.getElementById('canvas');
