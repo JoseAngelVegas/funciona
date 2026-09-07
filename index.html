@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Realidad Aumentada Móvil</title>
     
+    <!-- Incluir A-Frame -->
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/a5.js/build/aframe-ar.js"></script>
+    <!-- Incluir AR.js corregido -->
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     
     <style>
         body {
@@ -14,7 +16,6 @@
             overflow: hidden;
             font-family: Arial, sans-serif;
         }
-        /* Estilos para la interfaz de usuario superpuesta */
         #ui-container {
             position: fixed;
             bottom: 20px;
@@ -37,44 +38,27 @@
             margin: 0;
             color: #ddd;
         }
-        .arjs-loader {
-            height: 100%;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .arjs-loader div {
-            text-align: center;
-            font-size: 1.25em;
-            color: white;
-        }
     </style>
 </head>
 <body style="margin: 0; overflow: hidden;">
 
-    <div class="arjs-loader">
-        <div>Cargando experiencia de Realidad Aumentada... Por favor, permite el acceso a la cámara.</div>
-    </div>
-
+    <!-- Interfaz informativa -->
     <div id="ui-container">
         <h1>Visor AR Múltiple</h1>
         <p>Apunta la cámara al marcador <strong>HIRO</strong></p>
     </div>
 
+    <!-- Escena de Realidad Aumentada -->
     <a-scene 
         embedded 
         arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
         renderer="logarithmicDepthBuffer: true;"
         vr-mode-ui="enabled: false">
 
+        <!-- Definir el marcador Hiro -->
         <a-marker preset="hiro">
             
+            <!-- Cubo rojo -->
             <a-box 
                 position="0 0.5 0" 
                 rotation="0 45 0" 
@@ -82,12 +66,14 @@
                 material="color: #EF2D5E; roughness: 0.4;">
             </a-box>
 
+            <!-- Esfera verde -->
             <a-sphere 
                 position="-1 0.6 0" 
                 radius="0.4" 
                 material="color: #2ECC71; metalness: 0.3;">
             </a-sphere>
 
+            <!-- Cilindro azul -->
             <a-cylinder 
                 position="1 0.5 0" 
                 radius="0.3" 
@@ -96,6 +82,7 @@
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear;">
             </a-cylinder>
 
+            <!-- Texto flotante -->
             <a-text 
                 value="¡Objetos 3D en AR!" 
                 position="-0.9 1.4 0" 
@@ -105,22 +92,9 @@
 
         </a-marker>
 
+        <!-- Cámara de la escena AR -->
         <a-entity camera></a-entity>
     </a-scene>
 
-    <script>
-        // Script opcional en JavaScript para interactuar o depurar eventos
-        window.addEventListener('load', () => {
-            const marker = document.querySelector('a-marker');
-
-            marker.addEventListener('markerFound', () => {
-                console.log('¡Marcador Hiro detectado!');
-            });
-
-            marker.addEventListener('markerLost', () => {
-                console.log('Marcador perdido.');
-            });
-        });
-    </script>
 </body>
 </html>
