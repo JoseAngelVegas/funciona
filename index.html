@@ -2,80 +2,125 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Conectores</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Realidad Aumentada Móvil</title>
+    
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/a5.js/build/aframe-ar.js"></script>
+    
     <style>
-        body { height: 100vh; display: flex; justify-content: center; align-items: center; margin: 0; background: #f4f4f9; overflow: hidden; }
-        .node { position: absolute; width: 40px; height: 40px; cursor: pointer; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .node.active { background: #e67e22 !important; }
-        #node1 { top: 200px; left: 250px; background: #3498db; }
-        #node2 { top: 300px; left: 550px; background: #3498db; }
-        #node3 { top: 100px; left: 200px; background: #3498db; }
-        #node4 { top: 300px; left: 300px; background: #3498db; }
-        svg { position: absolute; width: 100%; height: 100%; pointer-events: none; }
-        line { stroke: #2c3e50; stroke-width: 3; }
-        #msg { display: none; position: absolute; top: 10px; background: #27ae60; color: white; padding: 10px 20px; font-weight: bold; border-radius: 5px; }
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        /* Estilos para la interfaz de usuario superpuesta */
+        #ui-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 12px;
+            color: white;
+            pointer-events: none;
+        }
+        h1 {
+            font-size: 16px;
+            margin: 0 0 5px 0;
+        }
+        p {
+            font-size: 12px;
+            margin: 0;
+            color: #ddd;
+        }
+        .arjs-loader {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .arjs-loader div {
+            text-align: center;
+            font-size: 1.25em;
+            color: white;
+        }
     </style>
 </head>
-<body>
+<body style="margin: 0; overflow: hidden;">
 
-    <div class="node" id="node1"></div>
-    <div class="node" id="node2"></div>
-    <div class="node" id="node3"></div>
-    <div class="node" id="node4"></div>
+    <div class="arjs-loader">
+        <div>Cargando experiencia de Realidad Aumentada... Por favor, permite el acceso a la cámara.</div>
+    </div>
 
-    <svg><line id="temp" style="display:none"/></svg>
-    <div id="msg">¡Completado! 🎉</div>
+    <div id="ui-container">
+        <h1>Visor AR Múltiple</h1>
+        <p>Apunta la cámara al marcador <strong>HIRO</strong></p>
+    </div>
+
+    <a-scene 
+        embedded 
+        arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+        renderer="logarithmicDepthBuffer: true;"
+        vr-mode-ui="enabled: false">
+
+        <a-marker preset="hiro">
+            
+            <a-box 
+                position="0 0.5 0" 
+                rotation="0 45 0" 
+                scale="0.5 0.5 0.5" 
+                material="color: #EF2D5E; roughness: 0.4;">
+            </a-box>
+
+            <a-sphere 
+                position="-1 0.6 0" 
+                radius="0.4" 
+                material="color: #2ECC71; metalness: 0.3;">
+            </a-sphere>
+
+            <a-cylinder 
+                position="1 0.5 0" 
+                radius="0.3" 
+                height="0.8" 
+                material="color: #3498DB;"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear;">
+            </a-cylinder>
+
+            <a-text 
+                value="¡Objetos 3D en AR!" 
+                position="-0.9 1.4 0" 
+                scale="0.7 0.7 0.7" 
+                color="#FFFFFF">
+            </a-text>
+
+        </a-marker>
+
+        <a-entity camera></a-entity>
+    </a-scene>
 
     <script>
-        let start = null, pairs = new Set();
-        const temp = document.getElementById('temp');
+        // Script opcional en JavaScript para interactuar o depurar eventos
+        window.addEventListener('load', () => {
+            const marker = document.querySelector('a-marker');
 
-        const getCenter = n => {
-            const r = n.getBoundingClientRect();
-            return { x: r.left + r.width/2, y: r.top + r.height/2 };
-        };
+            marker.addEventListener('markerFound', () => {
+                console.log('¡Marcador Hiro detectado!');
+            });
 
-        document.querySelectorAll('.node').forEach(node => {
-            node.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const c = getCenter(node);
-
-                if (!start) {
-                    start = node;
-                    node.classList.add('active');
-                    temp.setAttribute('x1', c.x); temp.setAttribute('y1', c.y);
-                    temp.setAttribute('x2', c.x); temp.setAttribute('y2', c.y);
-                    temp.style.display = 'block';
-                } else if (start !== node) {
-                    const sc = getCenter(start);
-                    const key = [start.id, node.id].sort().join('-');
-
-                    if (!pairs.has(key)) {
-                        pairs.add(key);
-                        const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                        l.setAttribute('x1', sc.x); l.setAttribute('y1', sc.y);
-                        l.setAttribute('x2', c.x); l.setAttribute('y2', c.y);
-                        l.setAttribute('stroke', '#27ae60');
-                        document.querySelector('svg').appendChild(l);
-
-                        if (pairs.size === 6) document.getElementById('msg').style.display = 'block';
-                    }
-                    reset();
-                }
+            marker.addEventListener('markerLost', () => {
+                console.log('Marcador perdido.');
             });
         });
-
-        window.addEventListener('mousemove', e => {
-            if (start) { temp.setAttribute('x2', e.clientX); temp.setAttribute('y2', e.clientY); }
-        });
-
-        window.addEventListener('click', reset);
-
-        function reset() {
-            if (start) start.classList.remove('active');
-            start = null;
-            temp.style.display = 'none';
-        }
     </script>
 </body>
 </html>
