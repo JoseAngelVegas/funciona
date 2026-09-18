@@ -1,192 +1,106 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Mundo 3D 360 Grados</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #000;
-            font-family: sans-serif;
-        }
-        #canvas-container {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-        /* Botón para activar el giroscopio en iOS/Android modernos */
-        #ar-button {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 24px;
-            background: #ffffff;
-            color: #000;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            z-index: 10;
-        }
-        #ar-button:active {
-            background: #e0e0e0;
-        }
-    </style>
-</head>
 <body>
 
-    <div id="canvas-container"></div>
-    <button id="ar-button" style="display: none;">Activar Vista 360° / RA</button>
+<div id="container">
+<button type="button"><span>Hola</span></button>
+</div>
 
-    <!-- Importar Three.js y OrbitControls desde CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/DeviceOrientationControls.js"></script>
+<style>
 
-    <script>
-        let camera, scene, renderer;
-        let controls;
-        let isMobile = false;
+@import url(https://fonts.googleapis.com/css?family=Passion+One);
 
-        init();
-        animate();
+:root {
+  --hue: 0deg;
+}
 
-        function init() {
-            const container = document.getElementById('canvas-container');
+body, html {
+  height: 100%;
+  display: grid;
+  padding: 0;
+  margin: 0;
+    background-image: url("https://uvn-brightspot.s3.amazonaws.com/assets/vixes/btg/curiosidades.batanga.com/files/Hay-agua-potable-bajo-los-oceanos-1.jpg"), url("https://uvn-brightspot.s3.amazonaws.com/assets/vixes/btg/curiosidades.batanga.com/files/Hay-agua-potable-bajo-los-oceanos-1.jpg");
 
-            // 1. Crear la Escena
-            scene = new THREE.Scene();
+}
 
-            // 2. Crear la Cámara
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.25, 1000);
-            camera.position.set(0, 0, 0.1); // Posicionar ligeramente dentro de la esfera
+#container {
+  margin: auto;
+  border-radius: 100%;
+  transition: all 0.4s ease-in-out;
+  &:hover {
+    transform: scale(1.03);
+  }
+  @media (max-width: 468px) {
+    width: 80%;
+  }
+}
 
-            // 3. Crear el Renderizador
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            container.appendChild(renderer.domElement);
+button {
+  --filter-hue-rotate: 0deg;
+  --filter-brightness: 1;
+  --filter-shadow: 0 0 0 transparent;
+  aspect-ratio: 1;
+  width: min(40vw, 40vh);
+  background: radial-gradient(40vh, rgba(49, 54, 109, 0.5), transparent),
+    radial-gradient(
+      circle 30vw at top,
+      rgba(1, 180, 210, 0.3),
+      #638ad4,
+      transparent
+    ),
+    radial-gradient(circle 20vw at bottom, #2550aa, transparent);
+  font-size: min(8vw, 8vh);
+  border-radius: 20%;
+  border: none;
+  opacity: 0.5;
+  box-shadow: -10px 14px 24px -7px rgba(55, 254, 255, 0.82) inset,
+    5px -10px 18px 4px rgba(55, 254, 255, 0.22) inset;
+  animation: 6s ease-in reshape, 1.4s ease-in 5 color,
+    6s cubic-bezier(0.2, -2, 0, 0.5) 15s infinite reshape,
+    0.8s cubic-bezier(0.01, -0.5, 0, 0) 10s infinite color;
+  animation-play-state: paused;
+  transition: all 1s ease-in-out;
+  &:hover {
+    --filter-hue-rotate: 20deg;
+    box-shadow: -10px 14px 24px -7px rgba(55, 254, 255, 0.82) inset,
+      5px -10px 18px 4px rgba(55, 254, 255, 0.22) inset,
+      0 0 30px 0 rgba(14, 64, 76, 0.5);
+    animation-duration: 8s, 1s;
+    & span {
+      animation-play-state: running;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+  @media (max-width: 468px) {
+    width: 100%;
+    font-size: max(22px, 18vw);
+  }
+}
 
-            // 4. Crear un mundo 360 usando una esfera gigante con textura interna
-            // Generaremos una textura procedural de prueba (un patrón de rejilla estilo "rejilla espacial" o mundo virtual)
-            // Si prefieres una foto real 360, puedes cambiar la URL de la textura abajo.
-            const geometry = new THREE.SphereGeometry(500, 60, 40);
-            geometry.scale(-1, 1, 1); // Invertir la esfera hacia adentro para ver la textura desde el centro
+span {
+  font-weight: bold;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0.4) 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 2s;
+  animation: 2s gradient infinite paused;
+}
 
-            // Creamos un canvas dinámico para generar una textura de cuadrícula colorida de 360 grados
-            const canvasTexture = generateGridTexture();
-            const texture = new THREE.CanvasTexture(canvasTexture);
-            
-            const material = new THREE.MeshBasicMaterial({ map: texture });
-            const sphere = new THREE.Mesh(geometry, material);
-            scene.add(sphere);
 
-            // 5. Detectar si es dispositivo móvil
-            if (/Mobi|Android/i.test(navigator.userAgent)) {
-                isMobile = true;
-                const arButton = document.getElementById('ar-button');
-                arButton.style.display = 'block';
-                arButton.addEventListener('click', function() {
-                    requestDeviceOrientationPermission();
-                    arButton.style.display = 'none';
-                });
-            } else {
-                // Controles de Mouse para PC (OrbitControls)
-                controls = new THREE.OrbitControls(camera, renderer.domElement);
-                controls.enableZoom = false; // Desactivar zoom para mantener la experiencia 360 inmersiva
-                controls.enablePan = false;
-                controls.rotateSpeed = -0.5; // Invertir para que el arrastre se sienta natural
-            }
+</style>
 
-            // Evento para redimensionar la ventana
-            window.addEventListener('resize', onWindowResize);
-        }
 
-        // Función para pedir permisos de sensores en iOS (Safari moderno) y Android
-        function requestDeviceOrientationPermission() {
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                DeviceOrientationEvent.requestPermission()
-                    .then(response => {
-                        if (response === 'granted') {
-                            enableDeviceOrientation();
-                        } else {
-                            alert("Permiso de movimiento denegado.");
-                        }
-                    })
-                    .catch(console.error);
-            } else {
-                enableDeviceOrientation();
-            }
-        }
 
-        function enableDeviceOrientation() {
-            controls = new THREE.DeviceOrientationControls(camera, renderer.domElement);
-            controls.connect();
-            controls.update();
-        }
 
-        // Generador de una textura de prueba de colores para que el mundo 360 no requiera imágenes externas
-        function generateGridTexture() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 2048;
-            canvas.height = 1024;
-            const ctx = canvas.getContext('2d');
-
-            // Fondo estilo cielo/espacio virtual
-            ctx.fillStyle = '#111522';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Dibujar líneas y marcas tipo rejilla 360
-            ctx.strokeStyle = '#223355';
-            ctx.lineWidth = 4;
-            for (let x = 0; x < canvas.width; x += 128) {
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
-                ctx.stroke();
-            }
-            for (let y = 0; y < canvas.height; y += 128) {
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-                ctx.stroke();
-            }
-
-            // Añadir algunos elementos visuales flotantes de referencia en el mundo 360
-            ctx.fillStyle = '#00ffcc';
-            ctx.font = 'bold 60px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText("MUNDO 360° - NORTE", canvas.width / 2, canvas.height / 2 - 100);
-            
-            ctx.fillStyle = '#ff0055';
-            ctx.fillText("MUNDO 360° - SUR", canvas.width / 2, canvas.height / 2 + 100);
-
-            return canvas;
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-
-            if (controls) {
-                controls.update();
-            }
-
-            renderer.render(scene, camera);
-        }
-    </script>
 </body>
 </html>
