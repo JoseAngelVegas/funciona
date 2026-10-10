@@ -1,106 +1,186 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Figuras con Restricciones</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #error-message {
+            color: #d9534f;
+            margin-top: 10px;
+            font-weight: bold;
+            min-height: 20px;
+        }
+
+        #gallery {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .figure-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+
+        .figure-card h3 {
+            margin: 0 0 10px 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        /* Contenedor de la figura compuesta por varios divs */
+        .shape-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            background: #eef2f3;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Estilos base para los divs que forman la figura */
+        .shape-part {
+            position: absolute;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
 <body>
 
-<div id="container">
-<button type="button"><span>Hola</span></button>
-</div>
+    <div class="container">
+        <h1>Generador de Figuras</h1>
+        <p>Escribe lo que quieres crear (Ej. "estrella", "casa", "robot"):</p>
+        <div style="display: flex; justify-content: center;">
+            <input type="text" id="user-input" placeholder="Escribe aquí...">
+            <button id="generate-btn">Generar</button>
+        </div>
+        <div id="error-message"></div>
+    </div>
 
-<style>
+    <!-- Contenedor donde se acumularán las figuras permanentes -->
+    <div id="gallery"></div>
 
-@import url(https://fonts.googleapis.com/css?family=Passion+One);
+    <script>
+        // Lista de elementos prohibidos en minúsculas para validación
+        const prohibidos = ["manzana", "manzanas", "naranja", "naranjas", "arbol", "árbol", "arboles", "árboles", "chocolate"];
 
-:root {
-  --hue: 0deg;
-}
+        const inputEl = document.getElementById('user-input');
+        const btnEl = document.getElementById('generate-btn');
+        const errorEl = document.getElementById('error-message');
+        const galleryEl = document.getElementById('gallery');
 
-body, html {
-  height: 100%;
-  display: grid;
-  padding: 0;
-  margin: 0;
-    background-image: url("https://uvn-brightspot.s3.amazonaws.com/assets/vixes/btg/curiosidades.batanga.com/files/Hay-agua-potable-bajo-los-oceanos-1.jpg"), url("https://uvn-brightspot.s3.amazonaws.com/assets/vixes/btg/curiosidades.batanga.com/files/Hay-agua-potable-bajo-los-oceanos-1.jpg");
+        btnEl.addEventListener('click', () => {
+            const texto = inputEl.value.trim().toLowerCase();
+            errorEl.textContent = "";
 
-}
+            if (!texto) {
+                errorEl.textContent = "Por favor, escribe algo.";
+                return;
+            }
 
-#container {
-  margin: auto;
-  border-radius: 100%;
-  transition: all 0.4s ease-in-out;
-  &:hover {
-    transform: scale(1.03);
-  }
-  @media (max-width: 468px) {
-    width: 80%;
-  }
-}
+            // Validar restricciones
+            for (let palabraProhibida of prohibidos) {
+                if (texto.includes(palabraProhibida)) {
+                    errorEl.textContent = `Solicitud rechazada: No se permiten figuras de "${palabraProhibida}".`;
+                    return;
+                }
+            }
 
-button {
-  --filter-hue-rotate: 0deg;
-  --filter-brightness: 1;
-  --filter-shadow: 0 0 0 transparent;
-  aspect-ratio: 1;
-  width: min(40vw, 40vh);
-  background: radial-gradient(40vh, rgba(49, 54, 109, 0.5), transparent),
-    radial-gradient(
-      circle 30vw at top,
-      rgba(1, 180, 210, 0.3),
-      #638ad4,
-      transparent
-    ),
-    radial-gradient(circle 20vw at bottom, #2550aa, transparent);
-  font-size: min(8vw, 8vh);
-  border-radius: 20%;
-  border: none;
-  opacity: 0.5;
-  box-shadow: -10px 14px 24px -7px rgba(55, 254, 255, 0.82) inset,
-    5px -10px 18px 4px rgba(55, 254, 255, 0.22) inset;
-  animation: 6s ease-in reshape, 1.4s ease-in 5 color,
-    6s cubic-bezier(0.2, -2, 0, 0.5) 15s infinite reshape,
-    0.8s cubic-bezier(0.01, -0.5, 0, 0) 10s infinite color;
-  animation-play-state: paused;
-  transition: all 1s ease-in-out;
-  &:hover {
-    --filter-hue-rotate: 20deg;
-    box-shadow: -10px 14px 24px -7px rgba(55, 254, 255, 0.82) inset,
-      5px -10px 18px 4px rgba(55, 254, 255, 0.22) inset,
-      0 0 30px 0 rgba(14, 64, 76, 0.5);
-    animation-duration: 8s, 1s;
-    & span {
-      animation-play-state: running;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-  }
-  @media (max-width: 468px) {
-    width: 100%;
-    font-size: max(22px, 18vw);
-  }
-}
+            // Si pasa la validación, creamos el elemento permanente
+            crearFiguraPermanente(inputEl.value.trim());
+            inputEl.value = ""; // Limpiar input
+        });
 
-span {
-  font-weight: bold;
-  background: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0.4) 0%,
-    rgba(255, 255, 255, 0.9) 50%,
-    rgba(255, 255, 255, 0.4) 100%
-  );
-  background-size: 200% auto;
-  background-clip: text;
-  text-fill-color: transparent;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  transition: all 2s;
-  animation: 2s gradient infinite paused;
-}
+        function crearFiguraPermanente(textoOriginal) {
+            // Crear tarjeta contenedora
+            const card = document.createElement('div');
+            card.className = 'figure-card';
 
+            const title = document.createElement('h3');
+            title.textContent = `Figura: "${textoOriginal}"`;
+            card.appendChild(title);
 
-</style>
+            // Contenedor visual de la figura compuesta por divs
+            const shapeContainer = document.createElement('div');
+            shapeContainer.className = 'shape-container';
 
+            // Generar una combinación aleatoria/dinámica de divs para simular la figura
+            const numDivs = 4;
+            for (let i = 0; i < numDivs; i++) {
+                const part = document.createElement('div');
+                part.className = 'shape-part';
+                
+                // Dar formas y colores aleatorios basados en la longitud del texto para que sea determinista pero variado
+                const size = 30 + (i * 15);
+                part.style.width = `${size}px`;
+                part.style.height = `${size}px`;
+                part.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                part.style.top = `${20 + (i * 20)}px`;
+                part.style.left = `${20 + (i * 25)}px`;
+                part.style.borderRadius = i % 2 === 0 ? '50%' : '10%'; // Mezcla círculos y cuadrados
 
+                shapeContainer.appendChild(part);
+            }
 
-
+            card.appendChild(shapeContainer);
+            galleryEl.prepend(card); // Añade la nueva figura arriba en la galería
+        }
+    </script>
 </body>
 </html>
