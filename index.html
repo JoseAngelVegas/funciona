@@ -3,183 +3,316 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Figuras con Restricciones</title>
+    <title>Creador de Figuras con Divs - GitHub Pages</title>
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent: #38bdf8;
+            --danger: #f43f5e;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        h1 {
-            color: #333;
+            min-height: 100vh;
         }
 
         .container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-top: 0;
             text-align: center;
+            color: var(--accent);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
         }
 
         input[type="text"] {
-            width: 70%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            font-size: 1rem;
             outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent);
         }
 
         button {
-            padding: 10px 15px;
-            background-color: #007BFF;
-            color: white;
+            padding: 12px 20px;
+            background-color: var(--accent);
+            color: #0f172a;
             border: none;
-            border-radius: 4px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-weight: bold;
             cursor: pointer;
-            margin-left: 5px;
+            transition: opacity 0.2s;
         }
 
         button:hover {
-            background-color: #0056b3;
+            opacity: 0.9;
         }
 
-        #error-message {
-            color: #d9534f;
-            margin-top: 10px;
-            font-weight: bold;
+        #mensaje-error {
+            color: var(--danger);
+            font-size: 0.875rem;
+            margin-bottom: 16px;
             min-height: 20px;
+            text-align: center;
         }
 
-        #gallery {
-            margin-top: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
         }
 
         .figure-card {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            text-align: left;
-        }
-
-        .figure-card h3 {
-            margin: 0 0 10px 0;
-            color: #555;
-            font-size: 14px;
-        }
-
-        /* Contenedor de la figura compuesta por varios divs */
-        .shape-container {
+            background: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 140px;
             position: relative;
-            width: 150px;
-            height: 150px;
-            margin: 0 auto;
-            background: #eef2f3;
-            border-radius: 8px;
-            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        /* Estilos base para los divs que forman la figura */
-        .shape-part {
+        .figure-title {
+            font-size: 0.75rem;
+            margin-top: 12px;
+            color: #94a3b8;
+            text-transform: capitalize;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .btn-delete {
             position: absolute;
-            transition: all 0.3s ease;
+            top: 6px;
+            right: 6px;
+            background: transparent;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 2px 6px;
+        }
+        .btn-delete:hover {
+            color: var(--danger);
+        }
+
+        /* --- ESTILOS CSS ART (Divs configurados para formas) --- */
+        .fig-estrella {
+            position: relative;
+            display: inline-block;
+            width: 0; height: 0;
+            margin: 20px 0;
+            border-right: 25px solid transparent;
+            border-bottom: 18px solid #facc15;
+            border-left: 25px solid transparent;
+            transform: scale(0.7);
+        }
+        .fig-estrella:before {
+            content: '';
+            position: absolute;
+            top: -12px; left: -17px;
+            border-bottom: 20px solid #facc15;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            transform: rotate(-35deg);
+        }
+        .fig-estrella:after {
+            content: '';
+            position: absolute;
+            top: -12px; left: -17px;
+            border-bottom: 20px solid #facc15;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            transform: rotate(35deg);
+        }
+
+        .fig-corazon {
+            position: relative;
+            width: 30px; height: 27px;
+            margin: 10px auto;
+        }
+        .fig-corazon::before, .fig-corazon::after {
+            content: "";
+            position: absolute;
+            top: 0; width: 17px; height: 27px;
+            border-radius: 15px 15px 0 0;
+            background: #f43f5e;
+        }
+        .fig-corazon::before { left: 17px; transform: rotate(-45deg); transform-origin: 0 100%; }
+        .fig-corazon::after { left: 0; transform: rotate(45deg); transform-origin: 100% 100%; }
+
+        .fig-sol {
+            width: 35px; height: 35px;
+            background: #fbbf24;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #f59e0b;
+            margin: 10px auto;
+        }
+
+        .fig-default {
+            display: flex;
+            gap: 4px;
+            align-items: flex-end;
+            height: 35px;
+        }
+        .fig-default .bar {
+            width: 8px;
+            background: var(--accent);
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Generador de Figuras</h1>
-        <p>Escribe lo que quieres crear (Ej. "estrella", "casa", "robot"):</p>
-        <div style="display: flex; justify-content: center;">
-            <input type="text" id="user-input" placeholder="Escribe aquí...">
-            <button id="generate-btn">Generar</button>
+        <h1>Generador de Arte con Divs</h1>
+        <div class="input-group">
+            <input type="text" id="userInput" placeholder="Ej. estrella, corazón, sol, castillo..." maxlength="30">
+            <button id="btnGenerar">Crear</button>
         </div>
-        <div id="error-message"></div>
+        <div id="mensaje-error"></div>
     </div>
 
-    <!-- Contenedor donde se acumularán las figuras permanentes -->
-    <div id="gallery"></div>
+    <div class="gallery" id="gallery"></div>
 
     <script>
-        // Lista de elementos prohibidos en minúsculas para validación
-        const prohibidos = ["manzana", "manzanas", "naranja", "naranjas", "arbol", "árbol", "arboles", "árboles", "chocolate"];
+        // Lista negra estricta basada en requerimientos
+        const prohibidas = ["manzana", "manzanas", "naranja", "naranjas", "arbol", "árbol", "arboles", "árboles", "chocolate", "chocolates"];
 
-        const inputEl = document.getElementById('user-input');
-        const btnEl = document.getElementById('generate-btn');
-        const errorEl = document.getElementById('error-message');
-        const galleryEl = document.getElementById('gallery');
+        const input = document.getElementById('userInput');
+        const btn = document.getElementById('btnGenerar');
+        const errorDiv = document.getElementById('mensaje-error');
+        const gallery = document.getElementById('gallery');
 
-        btnEl.addEventListener('click', () => {
-            const texto = inputEl.value.trim().toLowerCase();
-            errorEl.textContent = "";
+        // Cargar elementos guardados al iniciar (Persistencia localStorage)
+        document.addEventListener('DOMContentLoaded', cargarFigurasGuardadas);
+
+        btn.addEventListener('click', procesarTexto);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') procesarTexto();
+        });
+
+        function procesarTexto() {
+            const texto = input.value.trim().toLowerCase();
+            errorDiv.textContent = "";
 
             if (!texto) {
-                errorEl.textContent = "Por favor, escribe algo.";
+                errorDiv.textContent = "Por favor escribe algo válido.";
                 return;
             }
 
-            // Validar restricciones
-            for (let palabraProhibida of prohibidos) {
-                if (texto.includes(palabraProhibida)) {
-                    errorEl.textContent = `Solicitud rechazada: No se permiten figuras de "${palabraProhibida}".`;
-                    return;
-                }
+            // Validar restricciones de la IA
+            const palabras = texto.split(/\s+/);
+            const contieneProhibida = palabras.some(p => prohibidas.includes(p));
+
+            if (contieneProhibida) {
+                errorDiv.textContent = "⚠️ La IA rechaza solicitudes de: manzanas, naranjas, árboles y chocolate.";
+                return;
             }
 
-            // Si pasa la validación, creamos el elemento permanente
-            crearFiguraPermanente(inputEl.value.trim());
-            inputEl.value = ""; // Limpiar input
-        });
+            // Crear objeto de figura
+            const nuevaFigura = {
+                id: Date.now(),
+                texto: input.value.trim()
+            };
 
-        function crearFiguraPermanente(textoOriginal) {
-            // Crear tarjeta contenedora
+            guardarEnStorage(nuevaFigura);
+            renderizarFigura(nuevaFigura);
+            input.value = "";
+        }
+
+        function obtenerEstructuraDivs(texto) {
+            const t = texto.toLowerCase();
+            if (t.includes('estrella')) return '<div class="fig-estrella"></div>';
+            if (t.includes('corazon') || t.includes('corazón')) return '<div class="fig-corazon"></div>';
+            if (t.includes('sol')) return '<div class="fig-sol"></div>';
+            
+            // Generador procedural abstracto basado en los caracteres del texto para palabras libres
+            let html = '<div class="fig-default">';
+            for(let i = 0; i < Math.min(texto.length, 5); i++) {
+                let altura = Math.max(15, (texto.charCodeAt(i) % 35));
+                html += `<div class="bar" style="height: ${altura}px;"></div>`;
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function renderizarFigura(fig) {
             const card = document.createElement('div');
             card.className = 'figure-card';
+            card.dataset.id = fig.id;
 
-            const title = document.createElement('h3');
-            title.textContent = `Figura: "${textoOriginal}"`;
-            card.appendChild(title);
+            const contenidoVisual = obtenerEstructuraDivs(fig.texto);
 
-            // Contenedor visual de la figura compuesta por divs
-            const shapeContainer = document.createElement('div');
-            shapeContainer.className = 'shape-container';
+            card.innerHTML = `
+                <button class="btn-delete" onclick="eliminarFigura(${fig.id})">✕</button>
+                ${contenidoVisual}
+                <div class="figure-title">${escapeHTML(fig.texto)}</div>
+            `;
+            gallery.prepend(card);
+        }
 
-            // Generar una combinación aleatoria/dinámica de divs para simular la figura
-            const numDivs = 4;
-            for (let i = 0; i < numDivs; i++) {
-                const part = document.createElement('div');
-                part.className = 'shape-part';
-                
-                // Dar formas y colores aleatorios basados en la longitud del texto para que sea determinista pero variado
-                const size = 30 + (i * 15);
-                part.style.width = `${size}px`;
-                part.style.height = `${size}px`;
-                part.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
-                part.style.top = `${20 + (i * 20)}px`;
-                part.style.left = `${20 + (i * 25)}px`;
-                part.style.borderRadius = i % 2 === 0 ? '50%' : '10%'; // Mezcla círculos y cuadrados
+        function guardarEnStorage(fig) {
+            let figuras = JSON.parse(localStorage.getItem('figuras_divs')) || [];
+            figuras.push(fig);
+            localStorage.setItem('figuras_divs', JSON.stringify(figuras));
+        }
 
-                shapeContainer.appendChild(part);
-            }
+        function cargarFigurasGuardadas() {
+            let figuras = JSON.parse(localStorage.getItem('figuras_divs')) || [];
+            gallery.innerHTML = "";
+            figuras.reverse().forEach(fig => renderizarFigura(fig));
+        }
 
-            card.appendChild(shapeContainer);
-            galleryEl.prepend(card); // Añade la nueva figura arriba en la galería
+        window.eliminarFigura = function(id) {
+            let figuras = JSON.parse(localStorage.getItem('figuras_divs')) || [];
+            figuras = figuras.filter(f => f.id !== id);
+            localStorage.setItem('figuras_divs', JSON.stringify(figuras));
+            cargarFigurasGuardadas();
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
         }
     </script>
 </body>
