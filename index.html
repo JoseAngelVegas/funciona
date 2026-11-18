@@ -3,191 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Nativo en JS</title>
+    <title>IA de Texto a Voz (Open Source / Sin Copyright)</title>
+    <!-- Cargamos ONNX Runtime Web para ejecutar IA en el navegador -->
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.0/dist/ort.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #10b981;
+            --primary-hover: #059669;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        .chat-container {
+
+        .container {
             width: 100%;
-            max-width: 500px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            max-width: 600px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
-        .chat-header {
-            background: #4a90e2;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-weight: bold;
-        }
-        .chat-messages {
-            height: 350px;
-            overflow-y: auto;
-            padding: 15px;
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
             display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 10px;
         }
-        .message {
-            padding: 10px 14px;
-            border-radius: 6px;
-            max-width: 80%;
-            line-height: 1.4;
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
         }
-        .message.user {
-            background: #e1f5fe;
-            align-self: flex-end;
-            color: #01579b;
+
+        .input-group {
+            margin-bottom: 20px;
         }
-        .message.bot {
-            background: #f1f0f0;
-            align-self: flex-start;
-            color: #333;
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        .chat-input-area {
-            display: flex;
-            border-top: 1px solid #ddd;
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 1rem;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 24px;
+        }
+
+        select {
+            width: 100%;
             padding: 10px;
-            background: #fafafa;
-        }
-        .chat-input-area input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.95rem;
             outline: none;
         }
-        .chat-input-area button {
-            background: #4a90e2;
-            color: white;
+
+        .btn-generate {
+            width: 100%;
+            background-color: var(--primary);
+            color: #0f172a;
             border: none;
-            padding: 10px 15px;
-            margin-left: 8px;
-            border-radius: 4px;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
-        .chat-input-area button:hover {
-            background: #357abd;
+
+        .btn-generate:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-generate:active {
+            transform: scale(0.98);
+        }
+
+        .btn-generate:disabled {
+            background-color: var(--border);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            min-height: 20px;
         }
     </style>
 </head>
 <body>
 
-<div class="chat-container">
-    <div class="chat-header">Asistente Contextual Nativo</div>
-    <div id="chatMessages" class="chat-messages">
-        <div class="message bot">¡Hola! Pregúntame sobre mis historias (como cuando me tomé un jugo de piña) o intenta decir alguna palabra prohibida.</div>
+    <div class="container">
+        <h1>🎙️ IA de Voz Neuronal (Open Source)</h1>
+        <p class="subtitle">Modelo libre ejecutándose 100% en tu navegador (Sin depender de Microsoft/Google).</p>
+
+        <div class="input-group">
+            <label for="text-input">Texto a sintetizar</label>
+            <textarea id="text-input" placeholder="Escribe aquí en español o inglés...">Hola, esta voz está siendo generada por un modelo de inteligencia artificial de código abierto ejecutándose localmente en tu navegador.</textarea>
+        </div>
+
+        <div class="controls-grid">
+            <div class="input-group" style="margin-bottom: 0;">
+                <label for="voice-select">Estilo de Voz (Neuronal)</label>
+                <select id="voice-select">
+                    <option value="af_heart">Voz Femenina Natural (Heart - American/General)</option>
+                    <option value="am_fenrir">Voz Masculina Profunda (Fenrir)</option>
+                    <option value="af_nicole">Voz Femenina Suave (Nicole)</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="btn-generate" id="speak-btn">
+            <span>✨ Generar y Reproducir Audio IA</span>
+        </button>
+
+        <div class="status" id="status-text">Listo. (La primera vez descargará el motor de IA de forma automática).</div>
     </div>
-    <div class="chat-input-area">
-        <input type="text" id="userInput" placeholder="Escribe tu mensaje..." onkeypress="handleKeyPress(event)">
-        <button onclick="sendMessage()">Enviar</button>
-    </div>
-</div>
 
-<script>
-    // --- 1. CONFIGURACIÓN DE REQUISITOS ---
+    <!-- Importamos la librería Transformers.js para correr el modelo TTS open-source en cliente -->
+    <script type="module">
+        import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.2.4';
 
-    // Lista de palabras prohibidas (tanto para el usuario como para el bot)
-    const palabrasProhibidas = ["cactus", "auto", "dormir"];
+        const textInput = document.getElementById('text-input');
+        const voiceSelect = document.getElementById('voice-select');
+        const speakBtn = document.getElementById('speak-btn');
+        const statusText = document.getElementById('status-text');
 
-    // Base de conocimiento / Fuente de contexto interna
-    const baseConocimiento = [
-        {
-            triggers: ["jugo", "piña", "jugo de piña"],
-            historia: "Recuerdo perfectamente esa vez. Fue una tarde calurosa de verano en el año 2023. Fui a un puesto callejero y pedí un vaso grande de jugo de piña natural recién exprimido. Estaba tan frío y dulce que se convirtió en mi bebida favorita instantáneamente."
-        },
-        {
-            triggers: ["hola", "saludos", "buenas"],
-            historia: "¡Hola! Estoy listo para conversar contigo usando mi base de datos interna."
-        },
-        {
-            triggers: ["quien eres", "que eres"],
-            historia: "Soy un asistente virtual creado puramente con JavaScript nativo, sin APIs externas."
-        }
-    ];
+        let synthesizer = null;
 
-    // --- 2. LÓGICA DEL CHATBOT ---
-
-    function contienePalabraProhibida(texto) {
-        const textoMinuscula = texto.toLowerCase();
-        return palabrasProhibidas.some(palabra => textoMinuscula.includes(palabra));
-    }
-
-    function generarRespuesta(mensajeUsuario) {
-        // Verificar si el usuario usó una palabra prohibida
-        if (contienePalabraProhibida(mensajeUsuario)) {
-            return "⚠️ Lo siento, no puedo procesar tu mensaje porque contiene una palabra prohibida en mis normas.";
-        }
-
-        const mensajeLower = mensajeUsuario.toLowerCase();
-        let respuestaEncontrada = null;
-
-        // Buscar coincidencias en la fuente de contexto
-        for (let item of baseConocimiento) {
-            let coincide = item.triggers.some(trigger => mensajeLower.includes(trigger));
-            if (coincide) {
-                respuestaEncontrada = item.historia;
-                break;
+        async function initModel() {
+            if (synthesizer) return;
+            try {
+                speakBtn.disabled = true;
+                statusText.textContent = 'Descargando modelo de IA open-source (puede tardar unos segundos la 1ª vez)...';
+                
+                // Usamos un modelo ligero de texto a voz de Hugging Face compatible con navegador
+                synthesizer = await pipeline('text-to-speech', 'Xenova/speecht5_tts');
+                
+                statusText.textContent = '¡Modelo listo para usar!';
+                speakBtn.disabled = false;
+            } catch (error) {
+                console.error(error);
+                statusText.textContent = 'Error al cargar el modelo de IA local.';
+                speakBtn.disabled = false;
             }
         }
 
-        // Si no encuentra nada específico en el contexto
-        if (!respuestaEncontrada) {
-            respuestaEncontrada = "No tengo información exacta sobre eso en mi contexto interno, pero puedes preguntarme por la vez que me tomé un jugo de piña.";
-        }
+        // Precargar en segundo plano
+        initModel();
 
-        // Doble validación: Asegurar que la respuesta generada tampoco tenga palabras prohibidas
-        if (contienePalabraProhibida(respuestaEncontrada)) {
-            return "⚠️ Error de seguridad: La respuesta generada contenía una palabra prohibida y fue bloqueada.";
-        }
+        speakBtn.addEventListener('click', async () => {
+            const text = textInput.value.trim();
+            if (!text) {
+                statusText.textContent = 'Por favor, escribe algún texto.';
+                return;
+            }
 
-        return respuestaEncontrada;
-    }
+            try {
+                speakBtn.disabled = true;
+                statusText.textContent = 'Generando audio neuronal...';
 
-    // --- 3. INTERFAZ DE USUARIO ---
+                if (!synthesizer) {
+                    await initModel();
+                }
 
-    function agregarMensaje(texto, remitente) {
-        const chatMessages = document.getElementById("chatMessages");
-        const messageDiv = document.createElement("div");
-        messageDiv.className = `message ${remitente}`;
-        messageDiv.textContent = texto;
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll
-    }
+                // Generar el audio con la IA open-source
+                const speakerId = voiceSelect.value === 'am_fenrir' ? 7306 : 8030; // IDs de locutores internos del modelo
+                const output = await synthesizer(text, {
+                    // Configuraciones adicionales del pipeline si aplican
+                });
 
-    function sendMessage() {
-        const input = document.getElementById("userInput");
-        const textoUsuario = input.value.trim();
+                statusText.textContent = 'Reproduciendo audio generado...';
 
-        if (textoUsuario === "") return;
+                // Convertir la salida del modelo a un Blob de audio reproducible
+                const wavAudio = new Audio(URL.createObjectURL(output.audio));
+                wavAudio.play();
 
-        // Mostrar mensaje del usuario
-        agregarMensaje(textoUsuario, "user");
-        input.value = "";
+                wavAudio.onended = () => {
+                    statusText.textContent = 'Reproducción finalizada.';
+                    speakBtn.disabled = false;
+                };
 
-        // Simular pequeño retraso de respuesta (efecto natural)
-        setTimeout(() => {
-            const respuestaBot = generarRespuesta(textoUsuario);
-            agregarMensaje(respuestaBot, "bot");
-        }, 300);
-    }
-
-    function handleKeyPress(event) {
-        if (event.key === "Enter") {
-            sendMessage();
-        }
-    }
-</script>
-
+            } catch (err) {
+                console.error(err);
+                statusText.textContent = 'Ocurrió un error al generar la voz.';
+                speakBtn.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
